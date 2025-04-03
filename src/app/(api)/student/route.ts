@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import Student from "@/models/Student";
-import bcrypt from "bcryptjs";
 import connect from "@/lib/db";
 import { MongooseError, Types } from "mongoose";
 import Trainer from "@/models/Trainer";
+import { generateOTP } from "@/lib/otp";
 
 const { ObjectId } = Types
 
@@ -31,7 +31,23 @@ export async function POST(req: Request) {
             return NextResponse.json({ phone: "phone already used" }, { status: 400 })
         }
 
-        const newStudent = await Student.create({ name, email, phone, date_birth, goals, weight, height, gender, injuries, trainer_id })
+        let otp;
+        let isDuplicate;
+        const MAX_ATTEMPTS = 10;
+        let attempts = 0;
+
+        do {
+            otp = generateOTP(name);
+            const existingStudent = await Student.findOne({ code_otp: otp.code });
+            isDuplicate = !!existingStudent;
+            attempts++;
+
+            if (attempts >= MAX_ATTEMPTS && isDuplicate) {
+                return NextResponse.json({ message: "No se pudo generar un OTP único después de varios intentos." }, { status: 400 });
+            }
+        } while (isDuplicate);
+
+        const newStudent = await Student.create({ name, email, phone, date_birth, goals, weight, height, gender, injuries, trainer_id, otp_code: otp.code, otp_exp: otp.otp_exp })
 
         return NextResponse.json({ message: "Student had been created", status: 201 })
 

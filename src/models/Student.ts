@@ -7,7 +7,7 @@ const StudentSchema = new Schema(
     {
         name: { type: "string", required: true },
         email: { type: "string", required: true, unique: true },
-        code_otp: { type: "string", required: true },
+        otp_code: { type: "string", required: true },
         otp_exp: { type: Date, required: true },
         phone: { type: "string", required: true },
         date_birth: { type: "string", required: true },
