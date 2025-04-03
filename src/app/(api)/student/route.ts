@@ -2,12 +2,24 @@ import { NextResponse } from "next/server";
 import Student from "@/models/Student";
 import bcrypt from "bcryptjs";
 import connect from "@/lib/db";
-import { MongooseError } from "mongoose";
+import { MongooseError, Types } from "mongoose";
+import Trainer from "@/models/Trainer";
 
-export async function POST (req:Request) {
+const { ObjectId } = Types
+
+export async function POST(req: Request) {
     try {
         await connect()
-        const {name, email, phone, date_birth, goals, weight, height, gender, injuries, trainer_id} = await req.json()
+        const { name, email, phone, date_birth, goals, weight, height, gender, injuries, trainer_id } = await req.json()
+
+        if (!ObjectId.isValid(trainer_id)) {
+            return NextResponse.json({ message: "ObjectId is not valid" }, { status: 400 })
+        }
+
+        const trainer = await Trainer.findById(trainer_id)
+        if (!trainer) {
+            return NextResponse.json({ message: "Trainer not found" }, { status: 400 })
+        }
 
         const emailUser = await Student.findOne({ email })
         if (emailUser) {
@@ -19,7 +31,7 @@ export async function POST (req:Request) {
             return NextResponse.json({ phone: "phone already used" }, { status: 400 })
         }
 
-        const newStudent = await Student.create({name, email, phone, date_birth, goals, weight, height, gender, injuries, trainer_id})
+        const newStudent = await Student.create({ name, email, phone, date_birth, goals, weight, height, gender, injuries, trainer_id })
 
         return NextResponse.json({ message: "Student had been created", status: 201 })
 
