@@ -62,11 +62,8 @@ export const PATCH = async (req: Request, { params }: { params: { trainer: strin
         return NextResponse.json(trainer, { status: 200 })
     } catch (error: any) {
 
-        if (error instanceof Error) {
-            return NextResponse.json({ message: error.message }, { status: 400 });
-        }
         return new NextResponse("Error in updating trainer" + error.message, {
-            status: 500
+            status: 400
         })
     }
 }

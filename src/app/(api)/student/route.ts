@@ -1,20 +1,21 @@
 import { NextResponse } from "next/server";
 import Student from "@/models/Student";
 import connect from "@/lib/db";
-import { MongooseError, Types } from "mongoose";
+import { MongooseError } from "mongoose";
 import Trainer from "@/models/Trainer";
 import { generateOTP } from "@/lib/otp";
-
-const { ObjectId } = Types
+import validate from "@/lib/validate";
 
 export async function POST(req: Request) {
     try {
         await connect()
         const { name, email, phone, date_birth, goals, weight, height, gender, injuries, trainer_id } = await req.json()
 
-        if (!ObjectId.isValid(trainer_id)) {
-            return NextResponse.json({ message: "ObjectId is not valid" }, { status: 400 })
-        }
+        validate.isValidName(name)
+        validate.isValidEmail(email)
+        validate.isValidPhone(phone)
+        validate.isValidDate(date_birth)
+        validate.isValidObjectId(trainer_id)
 
         const trainer = await Trainer.findById(trainer_id)
         if (!trainer) {
@@ -56,5 +57,16 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "There was an error when trying to connect to Mongo" }, { status: 500 })
         }
         return new NextResponse("There was an error creating a Student")
+    }
+}
+export const GET = async () => {
+    try {
+        await connect()
+        const users = await Student.find()
+        return NextResponse.json(users, { status: 200 })
+    } catch (error: any) {
+        return new NextResponse("Error in fetching users" + error.message, {
+            status: 500
+        })
     }
 }

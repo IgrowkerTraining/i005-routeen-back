@@ -30,15 +30,13 @@ export async function POST(req: Request) {
         const newTrainer = await Trainer.create({ name, email, password: hash_password, phone, date_birth })
 
         return NextResponse.json({ message: "Trainer had been created", status: 201 })
-    } catch (error) {
+    } catch (error: any) {
         console.log(error)
         if (error instanceof MongooseError) {
             return NextResponse.json({ message: "There was an error when trying to connect to Mongo" }, { status: 500 })
         }
-        if (error instanceof Error) {
-            return NextResponse.json({ message: error.message }, { status: 400 });
-        }
-        return new NextResponse("There was an error creating a Trainer")
+
+        return NextResponse.json({ message: error.message }, { status: 400 })
     }
 }
 

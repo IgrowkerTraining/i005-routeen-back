@@ -1,10 +1,17 @@
 import { NextResponse } from "next/server";
-
+import { Types } from "mongoose";
 const NAME_REGEX = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s'-]+$/
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_]).{8,}$/
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const PHONE_REGEX = /^\+?\d{8,15}$/;
 const DATE_REGEX = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+const { ObjectId } = Types
+
+function isValidObjectId(id: string) {
+    if (!ObjectId.isValid(id)) {
+        throw new Error("Invalid ObjectId format.")
+    }
+}
 
 function isValidName(name: string) {
     if (!NAME_REGEX.test(name)) {
@@ -37,6 +44,7 @@ function isValidDate(date: string) {
 }
 
 const validate = {
+    isValidObjectId,
     isValidName,
     isValidPassword,
     isValidEmail,
@@ -45,4 +53,3 @@ const validate = {
 }
 
 export default validate
-
