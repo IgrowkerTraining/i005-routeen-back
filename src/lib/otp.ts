@@ -1,13 +1,16 @@
-export function generateOTP(name: string) {
+export function generateOTP() {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const prefix = Array.from({ length: 3 }, () =>
+        letters.charAt(Math.floor(Math.random() * letters.length))
+    ).join('');
 
-    const prefix = name.trim().slice(0, 3).toUpperCase();
     const raw = Math.floor(Math.random() * 1000);
-    const number = raw.toString().padStart(3, '0')
+    const number = raw.toString().padStart(3, '0');
 
-    const code = prefix + number
+    const code = prefix + number;
 
-    const otp_exp = new Date()
-    otp_exp.setMinutes(otp_exp.getMonth() + 1)
+    const otp_end_date = new Date();
+    otp_end_date.setMonth(otp_end_date.getMonth() + 1);
 
-    return { code, otp_exp }
+    return { code, otp_end_date };
 }

@@ -1,15 +1,22 @@
-import { NextResponse } from "next/server";
 import { Types } from "mongoose";
 const NAME_REGEX = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s'-]+$/
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_]).{8,}$/
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const PHONE_REGEX = /^\+?\d{8,15}$/;
 const DATE_REGEX = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+const OTP_REGEX = /^[A-Z]{3}[0-9]{3}$/
+
 const { ObjectId } = Types
 
 function isValidObjectId(id: string) {
     if (!ObjectId.isValid(id)) {
         throw new Error("Invalid ObjectId format.")
+    }
+}
+
+function isValidOTP(otp: string) {
+    if (!OTP_REGEX.test(otp)) {
+        throw new Error("Invalid OTP format. OTP must be in the format XXX000, where X is a letter and 0 is a digit.")
     }
 }
 
@@ -49,7 +56,8 @@ const validate = {
     isValidPassword,
     isValidEmail,
     isValidPhone,
-    isValidDate
+    isValidDate,
+    isValidOTP,
 }
 
 export default validate

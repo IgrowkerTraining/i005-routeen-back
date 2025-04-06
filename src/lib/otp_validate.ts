@@ -1,11 +1,11 @@
-import Student from "@/models/Student";
+import Athlete from "@/models/Athlete";
 import { NextResponse } from "next/server";
 
 export async function otp_validate(code: string) {
 
-    const user = await Student.findOne({ otp_code: code })
+    const user = await Athlete.findOne({ otp_code: code })
     if (!user) {
-        return NextResponse.json({ message: "Student doesnt found" })
+        return NextResponse.json({ message: "Athlete doesnt found" })
     }
 
     const date = new Date

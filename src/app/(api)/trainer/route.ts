@@ -29,7 +29,7 @@ export async function POST(req: Request) {
         const hash_password = bcrypt.hashSync(password, 10)
         const newTrainer = await Trainer.create({ name, email, password: hash_password, phone, date_birth })
 
-        return NextResponse.json({ message: "Trainer had been created", status: 201 })
+        return NextResponse.json({ message: "Trainer had been created", newTrainer, status: 201 })
     } catch (error: any) {
         console.log(error)
         if (error instanceof MongooseError) {

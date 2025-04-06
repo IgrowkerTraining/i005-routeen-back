@@ -1,5 +1,4 @@
 import { InferSchemaType, Schema, model, models } from "mongoose";
-import { unique } from "next/dist/build/utils";
 
 const TrainerSchema = new Schema(
     {
