@@ -1,3 +1,4 @@
+import { corsOptionsResponse } from "@/lib/corsOptions";
 import connect from "@/lib/db";
 import Trainer from "@/models/Trainer";
 import bcrypt from "bcryptjs";
@@ -31,3 +32,5 @@ export const POST = async (req: Request) => {
         })
     }
 }
+
+export const OPTIONS = corsOptionsResponse
