@@ -13,7 +13,6 @@ export async function POST(req: Request) {
         validate.isValidName(name)
         validate.isValidEmail(email)
         validate.isValidPassword(password)
-        validate.isValidPassword(repeat_password)
         validate.isValidPhone(phone)
         validate.isValidDate(date_birth)
 
