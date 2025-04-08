@@ -22,7 +22,7 @@ export const POST = async (req: Request) => {
             return NextResponse.json({ message: "Incorrect password" }, { status: 400 })
         }
 
-        const payload = { id: user._id, email: user.email, name: user.name }
+        const payload = { id: user._id, role: user.role, name: user.name }
 
         const token = jwt.sign(payload, "hola", { expiresIn: "1d" })
 

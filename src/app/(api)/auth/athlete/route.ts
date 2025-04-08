@@ -26,7 +26,7 @@ export const POST = async (req: Request) => {
             return NextResponse.json({ message: "Associated student not found" }, { status: 400 });
         }
 
-        const payload = { id: athlete._id, email: athlete.email, name: athlete.name }
+        const payload = { id: athlete._id, role: athlete.role, name: athlete.name }
 
         const token = jwt.sign(payload, "hola", { expiresIn: "1d" })
 
