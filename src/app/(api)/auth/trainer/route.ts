@@ -5,6 +5,7 @@ import Trainer from "@/models/Trainer";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
+import { createTokenCookie } from "@/lib/cookies";
 
 export const POST = async (req: Request) => {
     try {
@@ -24,9 +25,12 @@ export const POST = async (req: Request) => {
 
         const payload = { id: user._id, role: user.role, name: user.name }
 
-        const token = jwt.sign(payload, "hola", { expiresIn: "1d" })
 
-        return NextResponse.json({ token, user }, { status: 200 })
+        const token = jwt.sign(payload, "hola", { expiresIn: "1d" });
+
+        const res = NextResponse.json({ user }, { status: 400 });
+        res.headers.set("Set-Cookie", createTokenCookie(token));
+        return res;
 
     } catch (error: any) {
         return new NextResponse("Error in creating trainer" + error.message, {

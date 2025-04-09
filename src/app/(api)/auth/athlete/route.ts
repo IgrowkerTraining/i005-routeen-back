@@ -4,6 +4,7 @@ import Athlete from "@/models/Athlete";
 import Otp from "@/models/Otp";
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
+import { createTokenCookie } from "@/lib/cookies";
 
 export const POST = async (req: Request) => {
     try {
@@ -28,9 +29,11 @@ export const POST = async (req: Request) => {
 
         const payload = { id: athlete._id, role: athlete.role, name: athlete.name }
 
-        const token = jwt.sign(payload, "hola", { expiresIn: "1d" })
+        const token = jwt.sign(payload, "hola", { expiresIn: "1d" });
 
-        return NextResponse.json({ token, athlete }, { status: 200 })
+        const res = NextResponse.json({ athlete }, { status: 200 });
+        res.headers.set("Set-Cookie", createTokenCookie(token));
+        return res;
 
     } catch (error: any) {
         return new NextResponse("Error in fetching student" + error.message, {
