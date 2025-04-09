@@ -7,6 +7,7 @@ const TrainerSchema = new Schema(
         password: { type: "string", required: true },
         phone: { type: "string", required: true },
         date_birth: { type: "string", required: true },
+        role: { type: "string", default: "trainer" }
     },
     {
         timestamps: true
