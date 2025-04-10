@@ -85,7 +85,7 @@ export async function POST(req: Request) {
 
         const newAthlete = await Athlete.create({ name, email, phone, date_birth, goals, weight, height, gender, injuries, trainer_id })
 
-        return NextResponse.json({ message: "Athlete had been created", newStudent, status: 201 })
+        return NextResponse.json({ message: "Athlete had been created", newAthlete, status: 201 })
 
     } catch (error: any) {
         if (error instanceof MongooseError) {

@@ -1,3 +1,33 @@
+/**
+ * @swagger
+ * /trainer/{trainer}/athletes:
+ *   get:
+ *     summary: Obtener todos los atletas asignados a un entrenador
+ *     tags:
+ *       - Trainer
+ *     parameters:
+ *       - name: trainer
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del entrenador
+ *     responses:
+ *       200:
+ *         description: Lista de atletas obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Athlete'
+ *       400:
+ *         description: Entrenador o atletas no encontrados
+ *       500:
+ *         description: Error del servidor al obtener los atletas
+ */
+
+
 import connect from "@/lib/db";
 import Trainer from "@/models/Trainer";
 import Athlete from "@/models/Athlete";

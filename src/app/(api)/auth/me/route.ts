@@ -1,3 +1,27 @@
+/**
+ * @swagger
+ * /auth/me:
+ *   get:
+ *     summary: Obtener información del usuario autenticado
+ *     tags:
+ *       - Auth
+ *     responses:
+ *       200:
+ *         description: Datos del usuario autenticado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   $ref: '#/components/schemas/Admin'
+ *       400:
+ *         description: Token no encontrado o inválido
+ *       500:
+ *         description: Error del servidor al obtener el usuario
+ */
+
+
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";

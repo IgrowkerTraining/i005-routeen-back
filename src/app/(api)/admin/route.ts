@@ -1,3 +1,30 @@
+/**
+ * @swagger
+ * /admin:
+ *   post:
+ *     summary: Registrar un nuevo administrador
+ *     tags:
+ *       - Admin
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Admin'
+ *     responses:
+ *       201:
+ *         description: Administrador registrado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Admin'
+ *       400:
+ *         description: Error de validación o datos duplicados
+ *       500:
+ *         description: Error del servidor al registrar admin
+ */
+
+
 import { NextResponse } from "next/server";
 import Admin from "@/models/Admin";
 import bcrypt from "bcryptjs";
