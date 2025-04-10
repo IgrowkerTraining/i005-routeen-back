@@ -4,7 +4,7 @@ const { ObjectId } = Types;
 
 const CategorySchema = new Schema(
     {
-        name: { type: "string", required: true },
+        name: { type: String, required: true },
         
     },
     {
