@@ -1,3 +1,74 @@
+/**
+ * @swagger
+ * /trainer:
+ *   post:
+ *     summary: Registrar un nuevo entrenador
+ *     tags:
+ *       - Trainer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               repeat_password:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *               date_birth:
+ *                 type: string
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *               - repeat_password
+ *               - phone
+ *               - date_birth
+ *     responses:
+ *       201:
+ *         description: Entrenador creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 newTrainer:
+ *                   $ref: '#/components/schemas/Trainer'
+ *       400:
+ *         description: Error de validación o email ya registrado
+ *       500:
+ *         description: Error del servidor al registrar el entrenador
+ */
+
+/**
+ * @swagger
+ * /trainer:
+ *   get:
+ *     summary: Obtener todos los entrenadores registrados
+ *     tags:
+ *       - Trainer
+ *     responses:
+ *       200:
+ *         description: Lista de entrenadores obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Trainer'
+ *       500:
+ *         description: Error del servidor al obtener entrenadores
+ */
+
 import { NextResponse } from "next/server";
 import Trainer from "@/models/Trainer";
 import bcrypt from "bcryptjs";

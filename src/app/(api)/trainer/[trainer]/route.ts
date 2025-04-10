@@ -1,3 +1,75 @@
+/**
+ * @swagger
+ * /trainer/{trainer}:
+ *   get:
+ *     summary: Obtener información de un entrenador por su ID
+ *     tags:
+ *       - Trainer
+ *     parameters:
+ *       - name: trainer
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del entrenador
+ *     responses:
+ *       200:
+ *         description: Entrenador obtenido exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Trainer'
+ *       400:
+ *         description: Entrenador no encontrado
+ *       500:
+ *         description: Error del servidor al obtener el entrenador
+ */
+
+/**
+ * @swagger
+ * /trainer/{trainer}:
+ *   patch:
+ *     summary: Actualizar información de un entrenador
+ *     tags:
+ *       - Trainer
+ *     parameters:
+ *       - name: trainer
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del entrenador
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *               date_birth:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Entrenador actualizado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Trainer'
+ *       400:
+ *         description: Solicitud inválida o sin campos válidos
+ *       404:
+ *         description: Entrenador no encontrado
+ *       500:
+ *         description: Error del servidor al actualizar entrenador
+ */
+
+
 import connect from "@/lib/db";
 import Trainer, { TrainerType } from "@/models/Trainer";
 import { NextResponse } from "next/server";

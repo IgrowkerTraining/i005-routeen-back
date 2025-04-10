@@ -1,3 +1,78 @@
+/**
+ * @swagger
+ * /athlete/{athlete}:
+ *   post:
+ *     summary: Subir foto de perfil para un atleta
+ *     tags:
+ *       - Athlete
+ *     parameters:
+ *       - name: athlete
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del atleta
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: Imagen subida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 url:
+ *                   type: string
+ *       400:
+ *         description: Archivo faltante o solicitud inválida
+ *       403:
+ *         description: No autorizado para modificar este recurso
+ *       404:
+ *         description: Atleta no encontrado
+ *       500:
+ *         description: Error del servidor al subir imagen
+ */
+
+
+/**
+ * @swagger
+ * /athlete/{athlete}:
+ *   get:
+ *     summary: Obtener información de un atleta por su ID
+ *     tags:
+ *       - Athlete
+ *     parameters:
+ *       - name: athlete
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del atleta
+ *     responses:
+ *       200:
+ *         description: Datos del atleta obtenidos correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Athlete'
+ *       400:
+ *         description: Atleta no encontrado
+ *       500:
+ *         description: Error del servidor
+ */
+
+
 import { NextResponse } from "next/server";
 import Athlete, { AthleteType } from "@/models/Athlete";
 import connect from "@/lib/db";
@@ -157,3 +232,5 @@ export const PATCH = async (req: Request, { params }: { params: { trainer: strin
         })
     }
 }
+
+//TODO ver que hacer con delete

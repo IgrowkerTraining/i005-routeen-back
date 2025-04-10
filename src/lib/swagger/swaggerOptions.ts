@@ -71,6 +71,17 @@ const swaggerDefinition = {
                     active: { type: 'boolean' }
                 },
                 required: ['athlete_id', 'otp_code', 'otp_start_date', 'otp_end_date']
+            },
+            Admin: {
+                type: 'object',
+                properties: {
+                    email: { type: 'string' },
+                    password: { type: 'string' },
+                    role: { type: 'string' },
+                    createdAt: { type: 'string' },
+                    updatedAt: { type: 'string' },
+                },
+                required: ['email', 'password']
             }
         },
     },
