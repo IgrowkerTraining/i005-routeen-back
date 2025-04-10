@@ -83,7 +83,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ phone: "phone already used" }, { status: 400 })
         }
 
-        const newStudent = await Athlete.create({ name, email, phone, date_birth, goals, weight, height, gender, injuries, trainer_id })
+        const newAthlete = await Athlete.create({ name, email, phone, date_birth, goals, weight, height, gender, injuries, trainer_id })
 
         return NextResponse.json({ message: "Athlete had been created", newStudent, status: 201 })
 

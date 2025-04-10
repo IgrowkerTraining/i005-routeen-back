@@ -1,6 +1,5 @@
 import { Schema, model, models, Types } from "mongoose";
 import Trainer from "./Trainer";
-import Otp from "./Otp";
 const { ObjectId } = Types;
 
 const AthleteSchema = new Schema(
@@ -15,6 +14,7 @@ const AthleteSchema = new Schema(
         gender: { type: "string", required: true },
         injuries: { type: "string", required: true },
         trainer_id: { type: ObjectId, ref: Trainer },
+        role: { type: "string", default: "athlete" }
     },
     {
         timestamps: true
