@@ -36,12 +36,13 @@ const swaggerDefinition = {
                     height: { type: 'string' },
                     gender: { type: 'string' },
                     injuries: { type: 'string' },
-                    trainer_id: { type: 'string', description: 'ID del entrenador' },
+                    trainer_id: { type: 'string' },
+                    profile_picture_url: { type: "string" },
+                    profile_picture_id: { type: "string" },
                 },
                 required: [
                     'name', 'email', 'phone', 'date_birth',
-                    'goals', 'weight', 'height', 'gender',
-                    'injuries', 'trainer_id'
+                    'goals', 'trainer_id'
                 ],
             },
             Trainer: {
@@ -54,7 +55,9 @@ const swaggerDefinition = {
                     phone: { type: 'string' },
                     date_birth: { type: 'string' },
                     createdAt: { type: 'string' },
-                    updatedAt: { type: 'string' }
+                    updatedAt: { type: 'string' },
+                    profile_picture_url: { type: "string" },
+                    profile_picture_id: { type: "string" },
                 },
                 required: ['name', 'email', 'password', 'phone', 'date_birth'],
             },

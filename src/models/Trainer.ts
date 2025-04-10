@@ -8,7 +8,8 @@ const TrainerSchema = new Schema(
         phone: { type: "string", required: true },
         date_birth: { type: "string", required: true },
         role: { type: "string", default: "trainer" },
-        profile_picture: { type: "string" },
+        profile_picture_url: { type: "string" },
+        profile_picture_id: { type: "string" },
     },
     {
         timestamps: true

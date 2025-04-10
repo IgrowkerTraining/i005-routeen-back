@@ -51,6 +51,12 @@ function isValidDate(date: string) {
     }
 }
 
+export function isValidString(value: any, fieldName: string) {
+    if (typeof value !== "string" || value.trim() === "") {
+        throw new Error(`${fieldName} is required and must be a non-empty string.`);
+    }
+}
+
 const validate = {
     isValidObjectId,
     isValidName,
@@ -59,6 +65,7 @@ const validate = {
     isValidPhone,
     isValidDate,
     isValidOTP,
+    isValidString,
 }
 
 export default validate
