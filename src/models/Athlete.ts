@@ -13,6 +13,7 @@ const AthleteSchema = new Schema(
         height: { type: "string", required: true },
         gender: { type: "string", required: true },
         injuries: { type: "string", required: true },
+        profile_picture: { type: "string" },
         trainer_id: { type: ObjectId, ref: Trainer },
         role: { type: "string", default: "athlete" }
     },
