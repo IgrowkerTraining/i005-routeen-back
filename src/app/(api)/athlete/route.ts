@@ -1,3 +1,55 @@
+/**
+ * @swagger
+ * /athlete:
+ *   post:
+ *     summary: Registra un nuevo atleta en el sistema
+ *     tags:
+ *       - Athlete
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Athlete'
+ *     responses:
+ *       201:
+ *         description: Atleta creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 newStudent:
+ *                   $ref: '#/components/schemas/Athlete'
+ *       400:
+ *         description: Error de validación o datos duplicados
+ *       500:
+ *         description: Error del servidor al crear el atleta
+ */
+
+
+/**
+ * @swagger
+ * /athlete:
+ *   get:
+ *     summary: Obtener todos los atletas registrados
+ *     tags:
+ *       - Athlete
+ *     responses:
+ *       200:
+ *         description: Lista de atletas obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Athlete'
+ *       400:
+ *         description: Error al obtener la lista de atletas
+ */
+
 import { NextResponse } from "next/server";
 import Athlete from "@/models/Athlete";
 import connect from "@/lib/db";
@@ -31,9 +83,9 @@ export async function POST(req: Request) {
             return NextResponse.json({ phone: "phone already used" }, { status: 400 })
         }
 
-        const newStudent = await Athlete.create({ name, email, phone, date_birth, goals, weight, height, gender, injuries, trainer_id })
+        const newAthlete = await Athlete.create({ name, email, phone, date_birth, goals, weight, height, gender, injuries, trainer_id })
 
-        return NextResponse.json({ message: "Student had been created", newStudent, status: 201 })
+        return NextResponse.json({ message: "Athlete had been created", newStudent, status: 201 })
 
     } catch (error: any) {
         if (error instanceof MongooseError) {
@@ -42,14 +94,15 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: "There was an error creating a Student" + error.message }, { status: 500 })
     }
 }
-export const GET = async () => {
+
+export async function GET() {
     try {
         await connect()
         const users = await Athlete.find()
         return NextResponse.json(users, { status: 200 })
     } catch (error: any) {
-        return new NextResponse("Error in fetching users" + error.message, {
-            status: 500
+        return new NextResponse("Error in fetching athletes" + error.message, {
+            status: 400
         })
     }
 }

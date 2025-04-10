@@ -3,18 +3,22 @@ import Trainer, { TrainerType } from "@/models/Trainer";
 import { NextResponse } from "next/server";
 import validate from "@/lib/validate";
 
-export const GET = async (req: Request, { params }: { params: { trainer: string } }) => {
+export async function GET(
+    req: Request,
+    { params }: { params: { trainer: string } }
+) {
     try {
-        await connect()
-        const trainer = await Trainer.findById(params.trainer)
+        console.log("params:", params);
+        await connect();
+        const trainer = await Trainer.findById(params.trainer);
         if (!trainer) {
-            return NextResponse.json({ message: "Trainer not found" }, { status: 400 })
+            return NextResponse.json({ message: "Trainer not found" }, { status: 400 });
         }
-        return NextResponse.json(trainer, { status: 200 })
+        return NextResponse.json(trainer, { status: 200 });
     } catch (error: any) {
-        return new NextResponse("Error in fetching trainer" + error.message, {
-            status: 500
-        })
+        return new NextResponse("Error in fetching trainer: " + error.message, {
+            status: 500,
+        });
     }
 }
 
