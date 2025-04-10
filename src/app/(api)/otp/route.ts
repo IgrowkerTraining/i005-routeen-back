@@ -1,3 +1,44 @@
+/**
+ * @swagger
+ * /otp:
+ *   post:
+ *     summary: Crear un nuevo código OTP para un atleta
+ *     tags:
+ *       - OTP
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - trainer_id
+ *               - athlete_id
+ *             properties:
+ *               trainer_id:
+ *                 type: string
+ *               athlete_id:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: OTP creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 otpRecord:
+ *                   $ref: '#/components/schemas/Otp'
+ *                 status:
+ *                   type: integer
+ *       400:
+ *         description: Datos inválidos o errores de validación
+ *       500:
+ *         description: Error interno del servidor
+ */
+
 import connect from "@/lib/db";
 import { generateOTP } from "@/lib/otp";
 import validate from "@/lib/validate";

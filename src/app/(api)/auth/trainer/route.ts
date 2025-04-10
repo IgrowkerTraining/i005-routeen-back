@@ -1,3 +1,43 @@
+/**
+ * @swagger
+ * /auth/trainer:
+ *   post:
+ *     summary: Iniciar sesión del entrenador
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: entrenador@correo.com
+ *               password:
+ *                 type: string
+ *                 example: yourPassword123
+ *     responses:
+ *       200:
+ *         description: Devuelve el token JWT y datos del entrenador
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                 user:
+ *                   $ref: '#/components/schemas/Trainer'
+ *       400:
+ *         description: Usuario no encontrado o contraseña incorrecta
+ *       500:
+ *         description: Error interno del servidor
+ */
 import connect from "@/lib/db";
 import validate from "@/lib/validate";
 import Trainer from "@/models/Trainer";
