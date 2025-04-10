@@ -5,21 +5,20 @@ import Category from "@/models/Category";
 
 export async function GET(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: { category: string  } }
   ) {
     try {
 
-      const { id } = await params; 
-  
+        const { category: categoryId } = await  params;  
       
       await connect();
      
-      if (!id) {
+      if (!categoryId ) {
         return NextResponse.json({ message: "ID parameter is missing" }, { status: 400 });
       }
   
 
-      const category = await Category.findById(id);
+      const category = await Category.findById(categoryId);
   
       if (!category) {
         return NextResponse.json({ message: "Category not found" }, { status: 404 });
@@ -32,14 +31,14 @@ export async function GET(
     }
   }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: { category: string} }) {
     try {
 
         await connect();
 
-        const { id } = await params;
+        const { category: categoryById} = await params;
 
-        if (!id) {
+        if (!categoryById) {
             return NextResponse.json(
                 { message: "Category ID is required" },
                 { status: 400 }
@@ -57,7 +56,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         }
 
         const category = await Category.findByIdAndUpdate(
-            id,
+            categoryById,
             { name: newName },
             { new: true }
         );
@@ -70,7 +69,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         }
 
         return NextResponse.json(
-            { message: `Category with ID ${id} updated successfully`, category },
+            { message: `Category with ID ${categoryById} updated successfully`, category },
             { status: 200 }
         );
     } catch (error: any) {
@@ -83,21 +82,21 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 }
 
 export async function DELETE(req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: { category: string } }
 ) {
     try {
         await connect();
 
-        const { id } = await params;
+        const { category: categoryById } = await params;
 
-        if (!id) {
+        if (!categoryById) {
             return NextResponse.json(
                 { message: "Category ID is required" },
                 { status: 400 }
             );
         }
 
-        const deletedCategory = await Category.findByIdAndDelete(id);
+        const deletedCategory = await Category.findByIdAndDelete(categoryById);
 
         if (!deletedCategory) {
             return NextResponse.json(

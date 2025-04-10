@@ -37,7 +37,10 @@ export async function GET() {
     try{
         await connect();
         const  categories = await Category.find();
-        //console.log("CATEGORÍAS DESDE GET:", categories);
+        if (!categories || categories.length === 0) {
+            return NextResponse.json({ message: "No categories found" }, { status: 404 });
+          }
+        
 
         return NextResponse.json(categories,{status:200});
 
@@ -47,75 +50,4 @@ export async function GET() {
     }
 }
 
-
-export async function DELETE(req: Request) {
-    try{
-        await connect();
-        const { name } = await req.json();
-
-        if(!name){
-            return NextResponse.json(
-                {message:"category name in required"},
-                {status: 400}
-            )
-        }
-        const category = await Category.findOneAndDelete({name});
-
-        if(!category){
-            return NextResponse.json(
-                {message:"category not found"},
-                {status: 404}
-            )
-        }
-        return NextResponse.json(
-            { message: `Category ${name} deleted successfully` },
-            {status:200}
-        )
-
-    }catch(error:any){
-        console.error("Error deleting category:",error)
-        return NextResponse.json(
-            {message:"Failed to delete"},
-            {status:500}
-        )
-    }
-}
-
-export async function PATCH(req:Request) {
-    try{
-        await connect();
-        const {name, newName} = await req.json();
-
-        if(!name || !newName){
-            return NextResponse.json(
-                {message:"Both 'name' and 'newName are required"},
-                {status: 400}
-            )
-        }
-     const category = await Category.findOneAndUpdate(
-        {name},
-        {name : newName},
-        {new: true}
-     )
-     if(!category){
-        return NextResponse.json(
-            {message:"category not found"},
-            {status: 404}
-        )
-        }
-     return NextResponse.json(
-        { message: `Category updated successfully`, category },
-        {status: 200}
-    )
-     
-    }catch(error: any){
-        console.error("error updating category:",error);
-        return NextResponse.json(
-            {message:"Failed to update category"},
-            {status: 500}
-        )
-
-    }
-    
-}
 
