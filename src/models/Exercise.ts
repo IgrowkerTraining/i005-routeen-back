@@ -1,0 +1,14 @@
+import { ObjectId } from "mongodb";
+import { Schema, model, models } from "mongoose";
+import Category from "./Category";
+
+const ExerciseSchema = new Schema({
+  name: { type: String, required: true, unique: true },
+  description: { type: String },
+  img: { type: String },
+  category_id: { type: ObjectId, ref: Category },
+});
+
+const Exercise = models.Exercise || model("Exercise", ExerciseSchema);
+
+export default Exercise;
