@@ -74,6 +74,9 @@ import connect from "@/lib/db";
 import Trainer, { TrainerType } from "@/models/Trainer";
 import { NextResponse } from "next/server";
 import validate from "@/lib/validate";
+import { getCurrentUser } from "@/lib/getCurrentUser";
+import { uploadToCloudinary } from "@/lib/cloudinary/uploadToCloudinary";
+import { cloudinary } from "@/lib/cloudinary/cloudinary";
 
 export async function GET(
     req: Request,
@@ -97,7 +100,21 @@ export async function GET(
 export const PATCH = async (req: Request, { params }: { params: { trainer: string } }) => {
     try {
         await connect()
-        const { name, email, phone, date_birth } = await req.json()
+
+        const user = await getCurrentUser();
+        const trainerId = params.trainer;
+
+        if (user.id !== trainerId) {
+            return NextResponse.json({ error: "You are not allowed to make this change" }, { status: 403 });
+        }
+
+        const data = await req.formData();
+
+        const name = data.get("name")?.toString();
+        const email = data.get("email")?.toString();
+        const phone = data.get("phone")?.toString();
+        const date_birth = data.get("date_birth")?.toString();
+        const file = data.get("file") as File | null;
 
         const updates: Partial<TrainerType> = {};
 
@@ -119,6 +136,24 @@ export const PATCH = async (req: Request, { params }: { params: { trainer: strin
         if (date_birth !== undefined && date_birth !== null && date_birth.trim() !== "") {
             validate.isValidDate(date_birth);
             updates.date_birth = date_birth;
+        }
+
+        if (file && file instanceof File) {
+            const existingTrainer = await Trainer.findById(trainerId);
+            if (!existingTrainer) {
+                return NextResponse.json({ message: "Trainer not found" }, { status: 404 });
+            }
+
+            const result = await uploadToCloudinary(file, {
+                folder: "TrainerProfilePicture",
+            });
+
+            if (existingTrainer.profile_picture_id) {
+                await cloudinary.uploader.destroy(existingTrainer.profile_picture_id);
+            }
+
+            updates.profile_picture_url = result.secure_url;
+            updates.profile_picture_id = result.public_id;
         }
 
         if (Object.keys(updates).length === 0) {

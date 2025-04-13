@@ -4,19 +4,19 @@ const { ObjectId } = Types;
 
 const AthleteSchema = new Schema(
     {
-        name: { type: "string", required: true },
-        email: { type: "string", required: true, unique: true },
-        phone: { type: "string", required: true },
-        date_birth: { type: "string", required: true },
-        goals: { type: "string", required: true },
-        weight: { type: "string" },
-        height: { type: "string" },
-        gender: { type: "string" },
-        injuries: { type: "string" },
-        profile_picture_url: { type: "string" },
-        profile_picture_id: { type: "string" },
-        trainer_id: { type: ObjectId, ref: Trainer },
-        role: { type: "string", default: "athlete" }
+        name: { type: String, required: true },
+        email: { type: String, required: true, unique: true },
+        phone: { type: String, required: true },
+        date_birth: { type: String, required: true },
+        goals: { type: String, required: true },
+        weight: { type: String },
+        height: { type: String },
+        gender: { type: String },
+        injuries: { type: String },
+        profile_picture_url: { type: String },
+        profile_picture_id: { type: String },
+        trainer_id: { type: ObjectId, ref: Trainer, required: true },
+        role: { type: String, default: "athlete" }
     },
     {
         timestamps: true

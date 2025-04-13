@@ -1,8 +1,8 @@
 /**
  * @swagger
  * /athlete/{athlete}:
- *   post:
- *     summary: Subir foto de perfil para un atleta
+ *   patch:
+ *     summary: Actualizar datos del atleta y/o subir foto de perfil
  *     tags:
  *       - Athlete
  *     parameters:
@@ -19,31 +19,45 @@
  *           schema:
  *             type: object
  *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *               date_birth:
+ *                 type: string
+ *                 format: date
+ *               goals:
+ *                 type: string
+ *               weight:
+ *                 type: string
+ *               height:
+ *                 type: string
+ *               gender:
+ *                 type: string
+ *               injuries:
+ *                 type: string
  *               file:
  *                 type: string
  *                 format: binary
+ *             required: []
  *     responses:
- *       201:
- *         description: Imagen subida exitosamente
+ *       200:
+ *         description: Atleta actualizado correctamente
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 url:
- *                   type: string
+ *               $ref: '#/components/schemas/Athlete'
  *       400:
- *         description: Archivo faltante o solicitud inválida
+ *         description: Datos inválidos o sin campos para actualizar
  *       403:
  *         description: No autorizado para modificar este recurso
  *       404:
  *         description: Atleta no encontrado
  *       500:
- *         description: Error del servidor al subir imagen
+ *         description: Error del servidor
  */
-
 
 /**
  * @swagger
@@ -136,6 +150,7 @@ export async function GET(
 ) {
     try {
         await connect();
+
         const athlete = await Athlete.findById(params.athlete);
         if (!athlete) {
             return NextResponse.json({ message: "Athlete not found" }, { status: 400 });
@@ -148,23 +163,29 @@ export async function GET(
     }
 }
 
-export const PATCH = async (req: Request, { params }: { params: { trainer: string } }) => {
+export const PATCH = async (req: Request, { params }: { params: { athlete: string } }) => {
     try {
         await connect()
-        const {
-            name,
-            email,
-            phone,
-            date_birth,
-            goals,
-            weight,
-            height,
-            gender,
-            injuries,
-        } = await req.json();
+        const user = await getCurrentUser()
+        const athleteId = params.athlete
 
+        if (user.id !== athleteId) {
+            return NextResponse.json({ error: "You are not allowed to make this change" }, { status: 403 });
+        }
+
+        const data = await req.formData();
         const updates: Partial<AthleteType> = {};
-        //TODO modificar validaciones
+
+        const name = data.get("name")?.toString();
+        const email = data.get("email")?.toString();
+        const phone = data.get("phone")?.toString();
+        const date_birth = data.get("date_birth")?.toString();
+        const goals = data.get("goals")?.toString();
+        const weight = data.get("weight")?.toString();
+        const height = data.get("height")?.toString();
+        const gender = data.get("gender")?.toString();
+        const injuries = data.get("injuries")?.toString();
+
         if (name !== undefined && name !== null && name.trim() !== "") {
             validate.isValidName(name);
             updates.name = name;
@@ -210,6 +231,25 @@ export const PATCH = async (req: Request, { params }: { params: { trainer: strin
             updates.injuries = injuries;
         }
 
+        const file = data.get("file") as File | null;
+        if (file && file instanceof File) {
+            const existingUser = await Athlete.findById(user.id);
+            if (!existingUser) {
+                return NextResponse.json({ error: "User not found" }, { status: 404 });
+            }
+
+            const result = await uploadToCloudinary(file, {
+                folder: "AthleteProfilePicture",
+            });
+
+            if (existingUser.profile_picture_id) {
+                await cloudinary.uploader.destroy(existingUser.profile_picture_id);
+            }
+
+            updates.profile_picture_url = result.secure_url;
+            updates.profile_picture_id = result.public_id;
+        }
+
         if (Object.keys(updates).length === 0) {
             return NextResponse.json(
                 { message: "No valid fields provided to update." },
@@ -217,7 +257,7 @@ export const PATCH = async (req: Request, { params }: { params: { trainer: strin
             );
         }
 
-        const athlete = await Athlete.findByIdAndUpdate(params.trainer, updates, {
+        const athlete = await Athlete.findByIdAndUpdate(athleteId, updates, {
             new: true,
             runValidators: true,
         });
