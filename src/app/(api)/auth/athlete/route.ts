@@ -2,33 +2,31 @@
  * @swagger
  * /auth/athlete:
  *   post:
- *     summary: Validar código OTP del atleta
+ *     summary: Obtener información del usuario autenticado desde el token
  *     tags:
  *       - Auth
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/OtpValidation'
  *     responses:
  *       200:
- *         description: Devuelve el token JWT y datos del atleta
+ *         description: Datos del usuario extraídos del token
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 token:
- *                   type: string
- *                 athlete:
- *                   $ref: '#/components/schemas/Athlete'
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     role:
+ *                       type: string
+ *                     name:
+ *                       type: string
  *       400:
- *         description: OTP inválido, expirado o atleta no encontrado
+ *         description: Token no encontrado o inválido
  *       500:
- *         description: Error interno del servidor
+ *         description: Error del servidor al obtener el usuario
  */
-
 
 import connect from "@/lib/db";
 import validate from "@/lib/validate";

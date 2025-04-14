@@ -1,3 +1,43 @@
+/**
+ * @swagger
+ * /auth/admin:
+ *   post:
+ *     summary: Iniciar sesión como administrador
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *             required:
+ *               - email
+ *               - password
+ *     responses:
+ *       200:
+ *         description: Inicio de sesión exitoso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 user:
+ *                   $ref: '#/components/schemas/Admin'
+ *       400:
+ *         description: Admin no encontrado o contraseña incorrecta
+ *       500:
+ *         description: Error del servidor al iniciar sesión
+ */
+
+
 import connect from "@/lib/db";
 import validate from "@/lib/validate";
 import Admin from "@/models/Admin";

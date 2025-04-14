@@ -39,6 +39,26 @@
  *         description: Error interno del servidor
  */
 
+/**
+ * @swagger
+ * /otp:
+ *   get:
+ *     summary: Obtener todos los registros OTP
+ *     tags:
+ *       - OTP
+ *     responses:
+ *       200:
+ *         description: Lista de códigos OTP obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Otp'
+ *       400:
+ *         description: Error al obtener los códigos OTP
+ */
+
 import connect from "@/lib/db";
 import { generateOTP } from "@/lib/otp";
 import validate from "@/lib/validate";
@@ -94,6 +114,18 @@ export const POST = async (req: Request) => {
     } catch (error: any) {
         return new NextResponse("Error in creating otp " + error.message, {
             status: 500
+        })
+    }
+}
+
+export async function GET() {
+    try {
+        await connect()
+        const users = await Otp.find()
+        return NextResponse.json(users, { status: 200 })
+    } catch (error: any) {
+        return new NextResponse("Error in fetching otp" + error.message, {
+            status: 400
         })
     }
 }
