@@ -1,3 +1,126 @@
+/**
+ * @swagger
+ * /category/{id}:
+ *   get:
+ *     summary: Obtener una categoría por su ID
+ *     tags:
+ *       - Category
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de la categoría
+ *         schema:
+ *           type: string
+ *           example: 661789e209f5b123456789ab
+ *     responses:
+ *       200:
+ *         description: Categoría encontrada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Category'
+ *       400:
+ *         description: Falta el parámetro ID
+ *       404:
+ *         description: Categoría no encontrada
+ *       500:
+ *         description: Error del servidor al obtener la categoría
+ */
+
+
+/**
+ * @swagger
+ * /category/{id}:
+ *   patch:
+ *     summary: Actualiza una categoría existente por su ID
+ *     tags:
+ *       - Category
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de la categoría a actualizar
+ *         schema:
+ *           type: string
+ *           example: 661789e209f5b123456789ab
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - newName
+ *             properties:
+ *               newName:
+ *                 type: string
+ *                 example: Nueva categoría actualizada
+ *     responses:
+ *       200:
+ *         description: Categoría actualizada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 category:
+ *                   $ref: '#/components/schemas/Category'
+ *       400:
+ *         description: Faltan datos requeridos o parámetros inválidos
+ *       404:
+ *         description: Categoría no encontrada
+ *       500:
+ *         description: Error del servidor al actualizar la categoría
+ */
+
+/**
+ * @swagger
+ * /category/{id}:
+ *   delete:
+ *     summary: Elimina una categoría por su ID
+ *     tags:
+ *       - Category
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de la categoría a eliminar
+ *         schema:
+ *           type: string
+ *           example: 661789e209f5b123456789ab
+ *     responses:
+ *       200:
+ *         description: Categoría eliminada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Category deleted successfully
+ *                 category:
+ *                   $ref: '#/components/schemas/Category'
+ *       400:
+ *         description: Falta el ID de la categoría
+ *       404:
+ *         description: Categoría no encontrada
+ *       500:
+ *         description: Error del servidor al eliminar la categoría
+ */
+
+
+
+
+
+
+
+
+
+
 import { NextResponse } from "next/server";
 import connect from "@/lib/db";
 import { MongooseError } from "mongoose";
