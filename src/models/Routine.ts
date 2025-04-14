@@ -6,7 +6,7 @@ const RoutineSchema = new Schema(
     {
         name: { type: "String", required: true },
         description: { type: "String"},
-        trainer_id: { type: ObjectId, ref: Trainer, required: true },
+        trainer_id: { type: ObjectId, ref: "Trainer", required: true },
     },
     {
         timestamps: true
