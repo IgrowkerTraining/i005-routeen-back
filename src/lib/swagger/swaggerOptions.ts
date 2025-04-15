@@ -72,6 +72,16 @@ const swaggerDefinition = {
                 },
                 required: ['athlete_id', 'otp_code', 'otp_start_date', 'otp_end_date']
             },
+            Category: {
+                type: 'object',
+                properties: {
+                    name: {
+                        type: 'string',
+                        description: 'Name of category',
+                        example: 'Gluteus'
+                    }
+                }
+            },
             Admin: {
                 type: 'object',
                 properties: {
@@ -83,8 +93,8 @@ const swaggerDefinition = {
                 },
                 required: ['email', 'password']
             }
-        },
-    },
+        }
+    }
 }
 
 const options = {
