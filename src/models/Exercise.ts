@@ -5,8 +5,9 @@ import Category from "./Category";
 const ExerciseSchema = new Schema({
   name: { type: String, required: true, unique: true },
   description: { type: String },
-  img: { type: String },
-  category_id: { type: ObjectId, ref: Category },
+  img_url: { type: String },
+  img_id: { type: String },
+  category_id: { type: ObjectId, requierd: true, ref: Category },
 });
 
 const Exercise = models.Exercise || model("Exercise", ExerciseSchema);
