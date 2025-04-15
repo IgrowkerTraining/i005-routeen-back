@@ -3,7 +3,7 @@ const NAME_REGEX = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s'-]+$/
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[\W_]).{8,}$/
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const PHONE_REGEX = /^\+?\d{8,15}$/;
-const DATE_REGEX = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+const DATE_REGEX = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
 const OTP_REGEX = /^[A-Z]{3}[0-9]{3}$/
 
 const { ObjectId } = Types
@@ -47,7 +47,7 @@ function isValidPhone(phone: string) {
 
 function isValidDate(date: string) {
     if (typeof date !== "string" || !DATE_REGEX.test(date)) {
-        throw new Error("Invalid date format. Date must be in the format DD/MM/YYYY.")
+        throw new Error("Invalid date format. Date must be in the format YYYY-MM-DD.");
     }
 }
 

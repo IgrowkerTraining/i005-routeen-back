@@ -5,7 +5,7 @@ const TrainerSchema = new Schema(
         name: { type: "string", required: true },
         email: { type: "string", required: true, unique: true },
         password: { type: "string", required: true },
-        phone: { type: "string", required: true },
+        phone: { type: "string", required: true, unique: true  },
         date_birth: { type: "string", required: true },
         role: { type: "string", default: "trainer" },
         profile_picture_url: { type: "string" },
