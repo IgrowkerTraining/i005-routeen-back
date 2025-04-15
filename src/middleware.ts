@@ -14,6 +14,15 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/api/:path*', '/auth/:path*', '/trainer/:path*'],
-
-}
+    matcher: [
+        '/auth/:path*',
+        '/trainer/:path*',
+        '/athlete/:path*',
+        '/admin/:path*',
+        '/otp/:path*',
+        '/routine/:path*',
+        '/category/:path*',
+        '/test/:path*',
+        '/docs/:path*',
+    ],
+};

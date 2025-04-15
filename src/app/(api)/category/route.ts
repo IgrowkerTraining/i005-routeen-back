@@ -61,25 +61,15 @@ import { Jwt } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import jwt from 'jsonwebtoken';
 import Admin from "@/models/Admin";
+import { get } from "http";
+import { getCurrentUser } from "@/lib/getCurrentUser";
 
 export async function POST(req: Request) {
     try {
+        const user = await getCurrentUser();
 
-        const cookieStore = cookies();
-        const token = (await cookieStore).get("token")?.value;
 
-        if (!token) {
-            return NextResponse.json(
-                { message: "Unauthorized, token is missing" },
-                { status: 401 }
-            )
-        }
-
-        const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-
-        const adm = await Admin.findOne({ email: decoded.email });
-
-        if (!adm || adm.role !== "admin") {
+        if (!user || user.role !== "admin") {
             return NextResponse.json({ message: "Unauthorized, admin role required" }, { status: 403 });
         }
         await connect();
