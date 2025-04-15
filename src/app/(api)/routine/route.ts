@@ -1,3 +1,50 @@
+/**
+ * @swagger
+ * /routine:
+ *   post:
+ *     summary: Crear una nueva rutina asociada al entrenador
+ *     tags:
+ *       - Routine
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Rutina de fuerza"
+ *               description:
+ *                 type: string
+ *                 example: "Rutina para aumentar la fuerza en piernas"
+ *             required:
+ *               - name
+ *               - description
+ *     responses:
+ *       201:
+ *         description: Rutina creada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Routine had been created"
+ *                 newRoutine:
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                     description:
+ *                       type: string
+ *       400:
+ *         description: Error en la validación de los datos
+ *       500:
+ *         description: Error interno del servidor al crear la rutina
+ */
+
 import { NextResponse } from "next/server";
 import Routine from "@/models/Routine";
 import Trainer from "@/models/Trainer";

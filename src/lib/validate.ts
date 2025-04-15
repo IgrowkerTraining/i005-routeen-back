@@ -5,6 +5,8 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const PHONE_REGEX = /^\+?\d{8,15}$/;
 const DATE_REGEX = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
 const OTP_REGEX = /^[A-Z]{3}[0-9]{3}$/
+const WEIGHT_REGEX = /^[0-9]+(\.[0-9]+)?$/;
+const HEIGHT_REGEX = /^[0-9]+(\.[0-9]+)?$/;
 
 const { ObjectId } = Types
 
@@ -57,6 +59,26 @@ export function isValidString(value: any, fieldName: string) {
     }
 }
 
+function isValidWeight(weight: string) {
+    if (typeof weight !== 'string' || !WEIGHT_REGEX.test(weight)) {
+        throw new Error("Invalid weight format. Weight must be a valid number.");
+    }
+}
+
+function isValidHeight(height: string) {
+    if (typeof height !== 'string' || !HEIGHT_REGEX.test(height)) {
+        throw new Error("Invalid height format. Height must be a valid number.");
+    }
+}
+
+function isValidGender(gender: string) {
+    gender = gender.toLowerCase();
+
+    if (gender !== "hombre" && gender !== "mujer" && gender !== "otro") {
+        throw new Error("Invalid gender format. Gender must be either 'hombre', 'mujer' or 'otro'.");
+    }
+}
+
 const validate = {
     isValidObjectId,
     isValidName,
@@ -66,6 +88,9 @@ const validate = {
     isValidDate,
     isValidOTP,
     isValidString,
+    isValidWeight,
+    isValidHeight,
+    isValidGender,
 }
 
 export default validate
