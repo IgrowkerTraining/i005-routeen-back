@@ -8,19 +8,20 @@
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
  *               name:
  *                 type: string
  *                 example: "Rutina de fuerza"
+ *                 description: "Nombre de la rutina"
  *               description:
  *                 type: string
  *                 example: "Rutina para aumentar la fuerza en piernas"
+ *                 description: "Descripción de la rutina"
  *             required:
- *               - name
- *               - description
+ *               - name  # Marca el campo 'name' como obligatorio
  *     responses:
  *       201:
  *         description: Rutina creada exitosamente
@@ -40,10 +41,13 @@
  *                     description:
  *                       type: string
  *       400:
- *         description: Error en la validación de los datos
+ *         description: Error en la validación de los datos o en la creación de la rutina
  *       500:
  *         description: Error interno del servidor al crear la rutina
  */
+
+
+
 /**
  * @swagger
  * /routine:
@@ -94,6 +98,10 @@ export async function POST(req:Request) {
         const trainer = await Trainer.findById(trainer_id)
         if (!trainer) {
             return NextResponse.json({ message: "Trainer not found" }, { status: 400 })
+        }
+
+        if (!name.trim()) {
+            return NextResponse.json({ message: "Name is required" }, { status: 400 });
         }
 
         const newRoutine = await Routine.create({ name, description, trainer_id })
