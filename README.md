@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 📱 Routeen
 
-## Getting Started
+**Routeen** is a _SportTech_ app designed for trainers and athletes who want to manage workout routines in a digital, fast, and intuitive way.
 
-First, run the development server:
+It allows trainers to create and assign personalized plans for each athlete, including exercises, reps, weights, and rest times. Athletes can access their routines from any device using a unique OTP code, eliminating the need for spreadsheets or external apps.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The platform also lets athletes update their progress in real time (modify weights, mark completed exercises, etc.), and trainers receive automatic notifications to adjust routines based on performance.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+A control panel for trainers is included, where they can manage athletes, routines, and quickly access training history.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 🛠 Tech Stack
 
-## Learn More
+This repository contains the **backend** of the Routeen app, built with the following technologies:
 
-To learn more about Next.js, take a look at the following resources:
+- **Next.js** – Server-side logic and API routes
+- **MongoDB** – Database for storing users, routines, exercises, and training data
+- **Cloudinary** – Image hosting for exercise illustrations and uploads
+- **JWT (JSON Web Tokens)** – Authentication system to protect API routes
+- **Twilio** – Messaging service used to send OTP codes to athletes via WhatsApp
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## 🚀 Getting Started
 
-## Deploy on Vercel
+To get started with the Routeen backend, follow these steps:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Fork the repository**  
+   Fork this repository to your own GitHub account to start working on it.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+2. **Clone the repository**  
+   Clone your forked repository to your local machine:
+
+   ```bash
+   git clone https://github.com/your-username/routeen.git
+   ```
+
+3. **Install dependencies**  
+   Once you have the repo in your code editor, install the project dependencies. You can use one of the following commands depending on your package manager:
+
+   ```bash
+   npm install
+   #or
+   yarn install
+   #or
+   pnpm install
+   ```
+
+4. **Create a `.env.local` file**  
+   Create a `.env.local` file in the root directory of the project. Use the `.env.template` file as a reference to set up your local environment variables.
+
+5. **Run the project**  
+   After setting up the environment variables, run the following command to start the application in development mode:
+
+   ```bash
+   npm run dev
+   #or
+   yarn run
+   #or
+   pnpm run
+   ```
+
+   The app will be available at [http://localhost:3000](http://localhost:3000).
