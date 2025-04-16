@@ -67,7 +67,7 @@ export const POST = async (req: Request) => {
 
         const token = jwt.sign(payload, "hola", { expiresIn: "1d" });
 
-        const res = NextResponse.json({ user }, { status: 200 });
+        const res = NextResponse.json({ token }, { status: 200 });
         res.headers.set("Set-Cookie", createTokenCookie(token));
 
         return res;
