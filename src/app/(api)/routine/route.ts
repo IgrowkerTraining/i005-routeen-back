@@ -13,6 +13,7 @@
  *             type: object
  *             properties:
  *               name:
+ *                  required: true
  *                 type: string
  *                 example: "Rutina de fuerza"
  *                 description: "Nombre de la rutina"
