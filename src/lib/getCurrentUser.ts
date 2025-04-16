@@ -12,8 +12,6 @@ export async function getCurrentUser(): Promise<JwtPayload> {
         const cookieStore = await cookies();
         const token = cookieStore.get("token")?.value;
 
-        console.log("Token recibido desde las cookies:", token);  // Borrar al terminar verificación
-
         if (!token) {
             throw new Error("Token not found");
         }
