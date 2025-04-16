@@ -44,6 +44,31 @@
  *       500:
  *         description: Error interno del servidor al crear la rutina
  */
+/**
+ * @swagger
+ * /routine:
+ *   get:
+ *     summary: Obtener todas las rutinas
+ *     tags:
+ *       - Routine
+ *     responses:
+ *       200:
+ *         description: Lista de rutinas obtenidas exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   name:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *       500:
+ *         description: Error al obtener las rutinas
+ */
+
 
 import { NextResponse } from "next/server";
 import Routine from "@/models/Routine";

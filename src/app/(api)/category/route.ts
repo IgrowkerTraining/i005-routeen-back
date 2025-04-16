@@ -82,13 +82,22 @@ export async function POST(req: Request) {
                 { status: 400 }
             );
         }
-        const newCategory = await Category.create({ name });
+
+        const normalizedName = name.trim().toLowerCase();
+
+        const newCategory = await Category.create({ name:normalizedName });
         return NextResponse.json(
             { message: "Category created successfully", category: newCategory },
             { status: 201 }
         );
     } catch (error: any) {
         console.error("Error creating category");
+        if(error.code ===11000){
+            return NextResponse.json(
+                {message:"A category whit this name already exists."},
+                {status:409}
+            )
+        }
         if (error instanceof MongooseError) {
             return NextResponse.json(
                 { message: "Database Error" },
