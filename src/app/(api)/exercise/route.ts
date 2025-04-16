@@ -2,6 +2,8 @@
  * @swagger
  * /exercise:
  *   get:
+ *     tags:
+ *       - Exercise
  *     summary: Obtener ejercicios por categoría
  *     description: Retorna todos los ejercicios asociados a una categoría
  *     parameters:
@@ -29,6 +31,8 @@
  * @swagger
  * /exercise:
  *   post:
+ *     tags:
+ *       - Exercise
  *     summary: Crear un nuevo ejercicio
  *     description: Solo admins pueden crear ejercicios. Puede incluir imagen (url base64).
  *     requestBody:

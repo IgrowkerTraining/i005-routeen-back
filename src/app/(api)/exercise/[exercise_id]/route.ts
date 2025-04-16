@@ -2,6 +2,8 @@
  * @swagger
  * /exercise/{exercise_id}:
  *   patch:
+ *     tags:
+ *       - Exercise
  *     summary: Actualizar un ejercicio
  *     description: Solo usuarios con rol admin pueden actualizar ejercicios. También puede actualizar la imagen si se proporciona una nueva.
  *     parameters:
@@ -51,6 +53,8 @@
  * @swagger
  * /exercise/{exercise_id}:
  *   delete:
+ *     tags:
+ *       - Exercise
  *     summary: Eliminar un ejercicio
  *     description: Solo usuarios con rol admin pueden eliminar ejercicios. También elimina la imagen de Cloudinary si existe.
  *     parameters:
