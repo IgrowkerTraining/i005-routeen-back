@@ -52,9 +52,15 @@ import connect from "@/lib/db";
 import { MongooseError } from "mongoose";
 import validate from "@/lib/validate";
 import { getCurrentUser } from "@/lib/getCurrentUser";
+import twilio from "twilio";
+import { generateOTP } from "@/lib/otp";
+import Otp from "@/models/Otp";
+import Athlete from "@/models/Athlete";
 
 
-export async function POST(req:Request) {
+
+
+export async function POST(req: Request) {
     try {
         await connect()
         const data = await req.formData();
@@ -73,7 +79,35 @@ export async function POST(req:Request) {
 
         const newRoutine = await Routine.create({ name, description, trainer_id })
 
-        return NextResponse.json({ message: "Routine had been created", newRoutine, status: 201 })
+        //return NextResponse.json({ message: "Routine had been created", newRoutine, status: 201 })
+
+        const athlete_id = data.get("athlete_id")?.toString() || "";
+
+        const athlete = await Athlete.findById(athlete_id); // 🔹 Lo traes de la base de datos
+
+        if (!athlete || !athlete.phone) {
+            return NextResponse.json({ message: "Athlete not found or missing phone" }, { status: 400 });
+        }
+
+        const otpResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/send-otp`, {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                phoneNumber: `whatsapp:${athlete.phone}`,
+                athlete_id: athlete_id
+            })
+        })
+        const otpResult = await otpResponse.json();
+
+        return NextResponse.json({
+            message: "Rutina creada y OTP enviado por WhatsApp",
+            newRoutine,
+            otp: otpResult,
+            status: 201,
+        });
+
 
     } catch (creationError: any) {
         console.error("Routine creation error:", creationError);
@@ -101,7 +135,7 @@ export async function GET() {
             return new NextResponse("Database error: " + error.message, { status: 500 });
         }
 
-        return new NextResponse("Error in fetching routines" + error.message, {status: 500})
+        return new NextResponse("Error in fetching routines" + error.message, { status: 500 })
     }
 }
 
@@ -129,14 +163,14 @@ export async function DELETE(req: Request) {
             return new NextResponse("Database error: " + error.message, { status: 500 });
         }
 
-        return new NextResponse("Error deleting routines" + error.message, {status: 500})
+        return new NextResponse("Error deleting routines" + error.message, { status: 500 })
     }
 }
 
 export async function PATCH(req: Request) {
     try {
         await connect();
-        
+
         const { name, newName, newDescription } = await req.json();
 
         if (!name || (!newName && !newDescription)) {
@@ -148,16 +182,16 @@ export async function PATCH(req: Request) {
 
         const routine = await Routine.findOne({ name });
         if (!routine) {
-            return NextResponse.json({ message: "Routine not found" },{ status: 404 });
+            return NextResponse.json({ message: "Routine not found" }, { status: 404 });
         }
 
         const updatedFields: any = {};
         if (newName) updatedFields.name = newName;
         if (newDescription) updatedFields.description = newDescription;
 
-        const updatedRoutine = await Routine.findOneAndUpdate({ name },updatedFields,{ new: true });
+        const updatedRoutine = await Routine.findOneAndUpdate({ name }, updatedFields, { new: true });
 
-        return NextResponse.json({ message: "Routine updated successfully", updatedRoutine },{ status: 200 });
+        return NextResponse.json({ message: "Routine updated successfully", updatedRoutine }, { status: 200 });
 
     } catch (error: any) {
         console.error("Error updating routine:", error);
