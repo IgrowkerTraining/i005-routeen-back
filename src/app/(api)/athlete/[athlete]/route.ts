@@ -95,54 +95,6 @@ import { getCurrentUser } from "@/lib/getCurrentUser";
 import { v2 as cloudinary } from 'cloudinary';
 import validate from "@/lib/validate";
 
-export async function POST(req: Request, { params }: { params: { athlete: string } }) {
-    try {
-        await connect()
-        const athleteId = params.athlete
-        const user = await getCurrentUser()
-        const data = await req.formData();
-        const file = data.get("file") as File;
-
-        if (user.id !== athleteId) {
-            return NextResponse.json({ error: "You are not allow to do this change" }, { status: 403 });
-        }
-
-        if (!file) {
-            return NextResponse.json({ error: "File not found" }, { status: 400 });
-        }
-
-        const existingUser = await Athlete.findById(user.id);
-        if (!existingUser) {
-            return NextResponse.json({ error: "User not found" }, { status: 404 });
-        }
-
-        const result = await uploadToCloudinary(file, {
-            folder: "AthleteProfilePicture",
-        });
-
-        if (existingUser.profile_picture_id) {
-            await cloudinary.uploader.destroy(existingUser.profile_picture_id);
-        }
-
-        const updateUser = await Athlete.findByIdAndUpdate(user.id, {
-            profile_picture_url: result.secure_url,
-            profile_picture_id: result.public_id,
-        })
-
-        if (!updateUser) {
-            return NextResponse.json({ error: "User not found" }, { status: 404 });
-        }
-
-        return NextResponse.json({
-            message: "File uploaded successfully",
-            url: result.secure_url,
-        }, { status: 201 })
-
-    } catch (error: any) {
-
-        return NextResponse.json({ message: "There was an error updating a profile picture" + error.message }, { status: 500 })
-    }
-}
 
 export async function GET(
     req: Request,
@@ -212,17 +164,17 @@ export const PATCH = async (req: Request, { params }: { params: { athlete: strin
         }
 
         if (weight !== undefined && weight !== null && weight.trim() !== "") {
-            validate.isValidString(weight, "Weight");
+            validate.isValidWeight(weight);
             updates.weight = weight;
         }
 
         if (height !== undefined && height !== null && height.trim() !== "") {
-            validate.isValidString(height, "Height");
+            validate.isValidHeight(height);
             updates.height = height;
         }
 
         if (gender !== undefined && gender !== null && gender.trim() !== "") {
-            validate.isValidString(gender, "Gender");
+            validate.isValidGender(gender);
             updates.gender = gender;
         }
 
