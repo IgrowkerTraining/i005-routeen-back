@@ -33,6 +33,7 @@
  *       500:
  *         description: Error interno del servidor al obtener la rutina
  */
+
 /**
  * @swagger
  * /routine/{routine}:
@@ -54,17 +55,17 @@
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               routine_id:
  *                 type: string
- *                 example: "Rutina de fuerza"
+ *                 example: "60c72b2f9b1e8e2b88a5b3b8"  # ID de la rutina a actualizar
  *               newName:
  *                 type: string
- *                 example: "Nueva rutina de fuerza"
+ *                 example: "Rutina avanzada de fuerza"
  *               newDescription:
  *                 type: string
- *                 example: "Descripción actualizada"
+ *                 example: "Descripción actualizada para aumentar la fuerza en piernas"
  *             required:
- *               - name
+ *               - routine_id
  *               - newName
  *     responses:
  *       200:
@@ -80,17 +81,20 @@
  *                 updatedRoutine:
  *                   type: object
  *                   properties:
+ *                     _id:
+ *                       type: string
  *                     name:
  *                       type: string
  *                     description:
  *                       type: string
  *       400:
- *         description: Datos inválidos o incompletos para la actualización
+ *         description: Falta uno de los campos 'newName' o 'newDescription'
  *       404:
  *         description: Rutina no encontrada
  *       500:
  *         description: Error interno del servidor al actualizar la rutina
  */
+
 /**
  * @swagger
  * /routine/{routine}:
@@ -160,16 +164,16 @@ export async function PATCH(req: Request) {
     try {
         await connect();
         
-        const { name, newName, newDescription } = await req.json();
+        const { routine_id, newName, newDescription } = await req.json();
 
-        if (!name || (!newName && !newDescription)) {
+        if (!newName && !newDescription) {
             return NextResponse.json(
-                { message: "Both 'name' and at least one of 'newName' or 'newDescription' are required" },
+                { message: "At least one of 'newName' or 'newDescription' is required" },
                 { status: 400 }
             );
         }
 
-        const routine = await Routine.findOne({ name });
+        const routine = await Routine.findOne({ routine_id });
         if (!routine) {
             return NextResponse.json({ message: "Routine not found" },{ status: 404 });
         }
@@ -178,7 +182,7 @@ export async function PATCH(req: Request) {
         if (newName) updatedFields.name = newName;
         if (newDescription) updatedFields.description = newDescription;
 
-        const updatedRoutine = await Routine.findOneAndUpdate({ name },updatedFields,{ new: true });
+        const updatedRoutine = await Routine.findOneAndUpdate({ routine_id },updatedFields,{ new: true });
 
         return NextResponse.json({ message: "Routine updated successfully", updatedRoutine },{ status: 200 });
 

@@ -1,63 +1,51 @@
 /**
  * @swagger
- * /athlete/{athlete}:
- *   patch:
- *     summary: Actualizar datos del atleta y/o subir foto de perfil
+ * /routine:
+ *   post:
+ *     summary: Crear una nueva rutina asociada al entrenador
  *     tags:
- *       - Athlete
- *     parameters:
- *       - name: athlete
- *         in: path
- *         required: true
- *         schema:
- *           type: string
- *         description: ID del atleta
+ *       - Routine
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
  *               name:
  *                 type: string
- *               email:
+ *                 example: "Rutina de fuerza"
+ *                 description: "Nombre de la rutina"
+ *               description:
  *                 type: string
- *               phone:
- *                 type: string
- *               date_birth:
- *                 type: string
- *                 format: date
- *               goals:
- *                 type: string
- *               weight:
- *                 type: string
- *               height:
- *                 type: string
- *               gender:
- *                 type: string
- *               injuries:
- *                 type: string
- *               file:
- *                 type: string
- *                 format: binary
- *             required: []
+ *                 example: "Rutina para aumentar la fuerza en piernas"
+ *                 description: "Descripción de la rutina"
+ *             required:
+ *               - name  # Marca 'name' como obligatorio
  *     responses:
- *       200:
- *         description: Atleta actualizado correctamente
+ *       201:
+ *         description: Rutina creada exitosamente
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Athlete'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Routine had been created"
+ *                 newRoutine:
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                     description:
+ *                       type: string
  *       400:
- *         description: Datos inválidos o sin campos para actualizar
- *       403:
- *         description: No autorizado para modificar este recurso
- *       404:
- *         description: Atleta no encontrado
+ *         description: Error en la validación de los datos o en la creación de la rutina
  *       500:
- *         description: Error del servidor
+ *         description: Error interno del servidor al crear la rutina
  */
+
 
 /**
  * @swagger
