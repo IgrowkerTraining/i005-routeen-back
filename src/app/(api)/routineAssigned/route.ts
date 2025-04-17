@@ -1,8 +1,8 @@
 /**
  * @swagger
- * /routineAssigned:
+ * /routine-assigned:
  *   post:
- *     summary: Asignar una rutina a un atleta específico
+ *     summary: Asignar una rutina a un atleta (solo accesible para entrenadores)
  *     tags:
  *       - RoutineAssigned
  *     requestBody:
@@ -14,23 +14,19 @@
  *             properties:
  *               athlete_id:
  *                 type: string
- *                 example: "605c72ef1532072fb79e3c8d"
+ *                 description: ID del atleta al que se le asignará la rutina
  *               routine_id:
  *                 type: string
- *                 example: "605c72ef1532072fb79e3c9f"
+ *                 description: ID de la rutina que se va a asignar
  *               description:
  *                 type: string
- *                 example: "Rutina personalizada para el atleta."
+ *                 description: Descripción personalizada de la rutina (opcional)
  *               assignment_date:
  *                 type: string
- *                 format: date
- *                 example: "2025-04-01"
- *             required:
- *               - athlete_id
- *               - routine_id
+ *                 description: Fecha en que se asigna la rutina
  *     responses:
  *       201:
- *         description: Routine successfully assigned to athlete
+ *         description: Rutina asignada exitosamente
  *         content:
  *           application/json:
  *             schema:
@@ -38,24 +34,28 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Routine assigned successfully"
+ *                   example: "Routine assigned was successfully assigned"
  *                 newRoutineAssigned:
  *                   type: object
  *                   properties:
  *                     routine_id:
  *                       type: string
+ *                       example: "605c72ef153207001f7e2c39"
  *                     athlete_id:
  *                       type: string
+ *                       example: "605c72ef153207001f7e2c31"
  *                     description:
  *                       type: string
+ *                       example: "Strength training routine"
  *                     assignment_date:
  *                       type: string
+ *                       example: "2025-04-18"
  *       400:
- *         description: Invalid request or missing parameters
+ *         description: El atleta no fue encontrado o los datos no son válidos
  *       403:
- *         description: You are not authorized to assign routines to this athlete
+ *         description: El usuario debe ser un entrenador para asignar rutinas o la rutina no puede ser asignada
  *       500:
- *         description: Internal server error
+ *         description: Error interno del servidor
  */
 
 /**
@@ -137,6 +137,11 @@ export async function POST(req:Request) {
         if (!originalRoutine) {
             return NextResponse.json({ message: "Original routine not found" }, { status: 400 });
         }
+
+        if (originalRoutine.trainer_id.toString() !== trainer_id) {
+            return NextResponse.json({ message: "You can only assign routines that you created." }, { status: 403 });
+        }
+        
         const description = customDescription || originalRoutine.description;
 
         const newRoutineAssigned = await RoutineAssigned.create({

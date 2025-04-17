@@ -40,6 +40,7 @@
 
 
 import { NextResponse } from "next/server";
+import Routine from "@/models/Routine";
 import RoutineAssigned from "@/models/RoutineAssigned";
 import connect from "@/lib/db";
 import { MongooseError } from "mongoose";
@@ -64,7 +65,12 @@ export async function DELETE(req: Request) {
             return new NextResponse("Assigned routine not found", { status: 404 });
         }
 
-        if (routineAssigned.trainer_id.toString() !== user.id) {
+        const originalRoutine = await Routine.findById(routineAssigned.routine_id);
+        if (!originalRoutine) {
+            return new NextResponse("Original routine not found", { status: 400 });
+        }
+
+        if (originalRoutine.trainer_id.toString() !== user.id) {
             return NextResponse.json({ message: "You can only delete routines you have assigned." }, { status: 403 });
         }
 
@@ -77,6 +83,6 @@ export async function DELETE(req: Request) {
             return new NextResponse("Database error: " + error.message, { status: 500 });
         }
 
-        return new NextResponse("Error deleting assigned routines" + error.message, {status: 500})
+        return new NextResponse("Error deleting assigned routines" + error.message, { status: 500 })
     }
 }
