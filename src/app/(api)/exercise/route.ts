@@ -64,46 +64,14 @@ import Category from "@/models/Category";
 import Exercise from "@/models/Exercise";
 import { NextResponse } from "next/server";
 import validate from "@/lib/validate";
+import { rejectForbiddenFields } from "@/lib/rejectForbiddenFields";
 
-// //Endpoint para obtener todos los ejercicios
-// export const GET = async () => {
-//   try {
-//     await connect();
-//     const exercises = await Exercise.find();
-
-//     return new NextResponse(JSON.stringify(exercises), { status: 200 });
-//   } catch (error: any) {
-//     return new NextResponse("Error in fetching exercises" + error.message, {
-//       status: 500,
-//     });
-//   }
-// };
-
-//Endpoint para obtener los ejercicios con una categoría en concreto
-export const GET = async (request: Request): Promise<NextResponse> => {
-  try {
-    const { searchParams } = new URL(request.url);
-    const categoryId = searchParams.get("category_id");
-
-    if (!categoryId) {
-      return new NextResponse("Category ID is required", { status: 400 });
-    }
-
-    await connect();
-
-    const exercises = await Exercise.find({ category_id: categoryId }).populate(
-      "category_id"
-    );
-
-    return NextResponse.json(exercises, { status: 200 });
-  } catch (error: unknown) {
-    const errorMessage = handleError(error);
-    return new NextResponse(
-      `An error occurred while getting the exercises: ${errorMessage}`,
-      { status: 500 }
-    );
-  }
-};
+interface ExerciseInput {
+  name: string;
+  description?: string;
+  category_id: string;
+  img_url?: string;
+}
 
 export const POST = async (request: Request): Promise<NextResponse> => {
   try {
@@ -117,7 +85,13 @@ export const POST = async (request: Request): Promise<NextResponse> => {
     }
 
     await connect();
-    const body = await request.json();
+
+    const body: ExerciseInput = await request.json();
+
+    const forbidden = rejectForbiddenFields(body, ["img_id", "_id", "__v"]);
+    if (forbidden) {
+      return NextResponse.json({ message: forbidden }, { status: 400 });
+    }
 
     const { name, description, category_id, img_url } = body;
 
@@ -127,13 +101,9 @@ export const POST = async (request: Request): Promise<NextResponse> => {
 
     const categoryExists = await Category.findById(category_id);
     if (!categoryExists) {
-      return new NextResponse("Category not found", { status: 404 });
-    }
-
-    if (!name || !category_id) {
       return NextResponse.json(
-        { message: "Name and category_id are required" },
-        { status: 400 }
+        { message: "Category not found" },
+        { status: 404 }
       );
     }
 
@@ -159,10 +129,29 @@ export const POST = async (request: Request): Promise<NextResponse> => {
 
     return NextResponse.json(newExercise, { status: 201 });
   } catch (error: unknown) {
-    const errorMessage = handleError(error);
-    return new NextResponse(
-      `An error occurred while creating the exercise: ${errorMessage}`,
-      { status: 500 }
+    const { message, status } = handleError(error);
+    return NextResponse.json({ message }, { status });
+  }
+};
+
+export const GET = async (request: Request): Promise<NextResponse> => {
+  try {
+    const { searchParams } = new URL(request.url);
+    const categoryId = searchParams.get("category_id");
+
+    if (!categoryId) {
+      return new NextResponse("Category ID is required", { status: 400 });
+    }
+
+    await connect();
+
+    const exercises = await Exercise.find({ category_id: categoryId }).populate(
+      "category_id"
     );
+
+    return NextResponse.json(exercises, { status: 200 });
+  } catch (error: unknown) {
+    const { message, status } = handleError(error);
+    return NextResponse.json({ message }, { status });
   }
 };
