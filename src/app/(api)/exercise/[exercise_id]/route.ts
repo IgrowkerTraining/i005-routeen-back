@@ -81,10 +81,18 @@ import { cloudinary } from "@/lib/cloudinary/cloudinary";
 import connect from "@/lib/db";
 import { handleError } from "@/lib/errorHandler";
 import { getCurrentUser } from "@/lib/getCurrentUser";
+import { rejectForbiddenFields } from "@/lib/rejectForbiddenFields";
 import validate from "@/lib/validate";
 import Category from "@/models/Category";
 import Exercise from "@/models/Exercise";
 import { NextResponse } from "next/server";
+
+interface ExerciseInput {
+  name?: string;
+  description?: string;
+  category_id?: string;
+  img_url?: string;
+}
 
 export const PATCH = async (
   request: Request,
@@ -100,7 +108,6 @@ export const PATCH = async (
     }
 
     const { exercise_id } = params;
-
     validate.isValidObjectId(exercise_id);
 
     await connect();
@@ -113,18 +120,14 @@ export const PATCH = async (
       );
     }
 
-    const body = await request.json();
-    const {
-      name,
-      description,
-      category_id,
-      img_url,
-    }: {
-      name?: string;
-      description?: string;
-      category_id?: string;
-      img_url?: string;
-    } = body;
+    const body: ExerciseInput = await request.json();
+
+    const forbidden = rejectForbiddenFields(body, ["img_id", "_id", "__v"]);
+    if (forbidden) {
+      return NextResponse.json({ message: forbidden }, { status: 400 });
+    }
+
+    const { name, description, category_id, img_url } = body;
 
     if (name) {
       validate.isValidString(name, "Name");
@@ -140,10 +143,8 @@ export const PATCH = async (
       try {
         validate.isValidObjectId(category_id);
       } catch (err) {
-        return NextResponse.json(
-          { message: "Invalid category ID" },
-          { status: 400 }
-        );
+        const { message, status } = handleError(err);
+        return NextResponse.json({ message }, { status });
       }
 
       const categoryExists = await Category.findById(category_id);
@@ -173,26 +174,19 @@ export const PATCH = async (
         exercise.img_url = uploadedImage.secure_url;
         exercise.img_id = uploadedImage.public_id;
       } catch (uploadError) {
-        console.error("Cloudinary image update error:", uploadError);
-
         exercise.img_url = previousImgUrl;
         exercise.img_id = previousImgId;
 
-        return NextResponse.json(
-          { message: "Failed to update image in Cloudinary" },
-          { status: 500 }
-        );
+        const { message, status } = handleError(uploadError);
+        return NextResponse.json({ message }, { status });
       }
     }
 
     await exercise.save();
     return NextResponse.json(exercise, { status: 200 });
   } catch (error: unknown) {
-    const message = handleError(error);
-    return NextResponse.json(
-      { message: `An error occurred while updating the exercise: ${message}` },
-      { status: 500 }
-    );
+    const { message, status } = handleError(error);
+    return NextResponse.json({ message }, { status });
   }
 };
 
@@ -238,10 +232,7 @@ export const DELETE = async (
 
     return new NextResponse("Exercise deleted successfully", { status: 200 });
   } catch (error: unknown) {
-    const errorMessage = handleError(error);
-    return new NextResponse(
-      `An error occurred while deleting the exercise: ${errorMessage}`,
-      { status: 500 }
-    );
+    const { message, status } = handleError(error);
+    return NextResponse.json({ message }, { status });
   }
 };

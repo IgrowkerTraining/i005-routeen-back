@@ -7,7 +7,7 @@ const ExerciseSchema = new Schema({
   description: { type: String },
   img_url: { type: String },
   img_id: { type: String },
-  category_id: { type: ObjectId, requierd: true, ref: Category },
+  category_id: { type: ObjectId, required: true, ref: Category },
 });
 
 const Exercise = models.Exercise || model("Exercise", ExerciseSchema);
