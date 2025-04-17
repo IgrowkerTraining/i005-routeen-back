@@ -163,8 +163,15 @@ export async function GET(req: Request, { params }: { params: { routine: string 
 export async function PATCH(req: Request) {
     try {
         await connect();
-        
+        const user = await getCurrentUser();
         const { routine_id, newName, newDescription } = await req.json();
+
+        validate.isValidName(newName)
+        validate.isValidDescription(newDescription)
+
+        if (user.role !== 'trainer') {
+            return NextResponse.json({ message: "You must be a trainer to delete assigned routines." }, { status: 403 });
+        }
 
         if (!newName && !newDescription) {
             return NextResponse.json(
