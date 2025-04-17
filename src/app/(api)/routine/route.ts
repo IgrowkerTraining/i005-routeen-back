@@ -97,6 +97,10 @@ export async function POST(req:Request) {
         validate.isValidName(name)
         validate.isValidDescription(description)
 
+        if (user.role !== 'trainer') {
+            return NextResponse.json({ message: "You must be a trainer to post routines." }, { status: 403 });
+        }
+
         const trainer = await Trainer.findById(trainer_id)
         if (!trainer) {
             return NextResponse.json({ message: "Trainer not found" }, { status: 400 })

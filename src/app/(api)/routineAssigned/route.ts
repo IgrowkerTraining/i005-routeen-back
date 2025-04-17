@@ -1,36 +1,36 @@
 /**
  * @swagger
- * /routine-assigned:
+ * /routineAssigned:
  *   post:
- *     summary: Asigna una rutina a un atleta
+ *     summary: Asignar una rutina a un atleta específico
  *     tags:
  *       - RoutineAssigned
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
  *               athlete_id:
  *                 type: string
- *                 description: ID del atleta al que se le asigna la rutina
+ *                 example: "605c72ef1532072fb79e3c8d"
  *               routine_id:
  *                 type: string
- *                 description: ID de la rutina que se asigna
+ *                 example: "605c72ef1532072fb79e3c9f"
  *               description:
  *                 type: string
- *                 description: Descripción personalizada de la rutina para el atleta (opcional)
+ *                 example: "Rutina personalizada para el atleta."
  *               assignment_date:
  *                 type: string
- *                 description: Fecha de asignación de la rutina (formato YYYY-MM-DD)
+ *                 format: date
+ *                 example: "2025-04-01"
  *             required:
  *               - athlete_id
  *               - routine_id
- *               - assignment_date
  *     responses:
  *       201:
- *         description: La rutina ha sido asignada exitosamente
+ *         description: Routine successfully assigned to athlete
  *         content:
  *           application/json:
  *             schema:
@@ -38,7 +38,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Routine assigned was successfully assigned"
+ *                   example: "Routine assigned successfully"
  *                 newRoutineAssigned:
  *                   type: object
  *                   properties:
@@ -51,9 +51,11 @@
  *                     assignment_date:
  *                       type: string
  *       400:
- *         description: Error en la creación de la rutina asignada o datos incorrectos
+ *         description: Invalid request or missing parameters
+ *       403:
+ *         description: You are not authorized to assign routines to this athlete
  *       500:
- *         description: Error en el servidor
+ *         description: Internal server error
  */
 
 /**
@@ -88,13 +90,14 @@
 import { NextResponse } from "next/server";
 import RoutineAssigned from "@/models/RoutineAssigned";
 import Routine from "@/models/Routine";
+import Athlete from "@/models/Athlete";
 import connect from "@/lib/db";
 import { MongooseError } from "mongoose";
 import validate from "@/lib/validate";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
 export async function POST(req:Request) {
-    try {
+    try { 
         await connect()
 
         const data = await req.formData();
@@ -113,12 +116,21 @@ export async function POST(req:Request) {
             return NextResponse.json({ message: "Trainer not found" }, { status: 400 })
         }
 
+        if (user.role !== 'trainer') {
+            return NextResponse.json({ message: "You must be a trainer to assign assigned routines." }, { status: 403 });
+        }
+
         if (!athlete_id) {
             return NextResponse.json({ message: "Athlete not found" }, { status: 400 })
         }
 
         if (!routine_id) {
             return NextResponse.json({ message: "routine_id is required" }, { status: 400 });
+        }
+
+        const athlete = await Athlete.findById(athlete_id);
+        if (athlete.trainer_id.toString() !== trainer_id) {
+            return NextResponse.json({ message: "You can only assign routines to your own athletes." }, { status: 403 });
         }
 
         const originalRoutine = await Routine.findById(routine_id);
