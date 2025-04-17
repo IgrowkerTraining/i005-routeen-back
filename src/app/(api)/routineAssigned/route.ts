@@ -1,7 +1,92 @@
+/**
+ * @swagger
+ * /routine-assigned:
+ *   post:
+ *     summary: Asigna una rutina a un atleta
+ *     tags:
+ *       - RoutineAssigned
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               athlete_id:
+ *                 type: string
+ *                 description: ID del atleta al que se le asigna la rutina
+ *               routine_id:
+ *                 type: string
+ *                 description: ID de la rutina que se asigna
+ *               description:
+ *                 type: string
+ *                 description: Descripción personalizada de la rutina para el atleta (opcional)
+ *               assignment_date:
+ *                 type: string
+ *                 description: Fecha de asignación de la rutina (formato YYYY-MM-DD)
+ *             required:
+ *               - athlete_id
+ *               - routine_id
+ *               - assignment_date
+ *     responses:
+ *       201:
+ *         description: La rutina ha sido asignada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Routine assigned was successfully assigned"
+ *                 newRoutineAssigned:
+ *                   type: object
+ *                   properties:
+ *                     routine_id:
+ *                       type: string
+ *                     athlete_id:
+ *                       type: string
+ *                     description:
+ *                       type: string
+ *                     assignment_date:
+ *                       type: string
+ *       400:
+ *         description: Error en la creación de la rutina asignada o datos incorrectos
+ *       500:
+ *         description: Error en el servidor
+ */
+
+/**
+ * @swagger
+ * /routine-assigned:
+ *   get:
+ *     summary: Obtiene todas las rutinas asignadas
+ *     tags:
+ *       - RoutineAssigned
+ *     responses:
+ *       200:
+ *         description: Lista de rutinas asignadas obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   routine_id:
+ *                     type: string
+ *                   athlete_id:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *                   assignment_date:
+ *                     type: string
+ *       500:
+ *         description: Error al obtener las rutinas asignadas
+ */
+
 import { NextResponse } from "next/server";
 import RoutineAssigned from "@/models/RoutineAssigned";
-import Trainer from "@/models/Trainer";
-import Athlete from "@/models/Athlete";
 import Routine from "@/models/Routine";
 import connect from "@/lib/db";
 import { MongooseError } from "mongoose";
