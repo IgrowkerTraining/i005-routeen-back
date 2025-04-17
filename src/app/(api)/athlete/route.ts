@@ -108,22 +108,18 @@ export async function POST(req: Request) {
         if (!trainer) {
             return NextResponse.json({ message: "Trainer not found" }, { status: 400 })
         }
-        console.log("1");
 
         const emailUser = await Athlete.findOne({ email })
         if (emailUser) {
             return NextResponse.json({ message: "email already used" }, { status: 400 })
         }
-        console.log("2");
 
         const phoneUser = await Athlete.findOne({ phone })
         if (phoneUser) {
             return NextResponse.json({ phone: "phone already used" }, { status: 400 })
         }
-        console.log("3");
 
         const newAthlete = await Athlete.create({ name, email, phone, date_birth, goals, trainer_id })
-        console.log("4");
 
         return NextResponse.json({ message: "Athlete had been created", newAthlete, status: 201 })
 

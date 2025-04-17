@@ -63,8 +63,8 @@ export async function GET(req: Request, { params }: { params: { athlete_id: stri
 
         const athlete_id = user.id;
 
-        const routinesAssigned = await RoutineAssigned.find({ athlete_id });
-
+        const routinesAssigned = await RoutineAssigned.find({ athlete_id }).populate('routine_id');
+        console.log(athlete_id)
         if (routinesAssigned.length === 0) {
             return NextResponse.json({ message: "No routines assigned to this athlete." }, { status: 404 });
         }
