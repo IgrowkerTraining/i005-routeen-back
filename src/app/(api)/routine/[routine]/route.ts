@@ -166,6 +166,9 @@ export async function PATCH(req: Request) {
         
         const { routine_id, newName, newDescription } = await req.json();
 
+        validate.isValidName(newName)
+        validate.isValidDescription(newDescription)
+
         if (!newName && !newDescription) {
             return NextResponse.json(
                 { message: "At least one of 'newName' or 'newDescription' is required" },

@@ -1,13 +1,13 @@
 import { Schema, InferSchemaType, model, models, Types } from "mongoose";
-import Trainer from "./Trainer";
+import Routine from "./Routine";
 import Athlete from "./Athlete";
 const { ObjectId } = Types;
 
 const RoutineAssignedSchema = new Schema(
     {
-        assignment_date: { type: "String", required: true },
+        assignment_date: {type: "date"},
         description: { type: "String"},
-        trainer_id: { type: ObjectId, ref: "Trainer", required: true },
+        routine_id: { type: ObjectId, ref: "Routine", required: true },
         athlete_id: { type: ObjectId, ref: "Athlete", required: true },
     },
     {

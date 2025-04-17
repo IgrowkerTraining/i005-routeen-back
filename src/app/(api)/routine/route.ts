@@ -95,6 +95,7 @@ export async function POST(req:Request) {
         const description = data.get("description")?.toString() || "";
 
         validate.isValidName(name)
+        validate.isValidDescription(description)
 
         const trainer = await Trainer.findById(trainer_id)
         if (!trainer) {
