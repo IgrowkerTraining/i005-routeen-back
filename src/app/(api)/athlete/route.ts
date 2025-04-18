@@ -8,9 +8,32 @@
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:  # Cambié a multipart/form-data para que coincida con formData en el código
  *           schema:
- *             $ref: '#/components/schemas/Athlete'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Juan Pérez"
+ *               email:
+ *                 type: string
+ *                 example: "juan.perez@example.com"
+ *               phone:
+ *                 type: string
+ *                 example: "+1234567890"
+ *               date_birth:
+ *                 type: string
+ *                 format: date
+ *                 example: "1990-01-01"
+ *               goals:
+ *                 type: string
+ *                 example: "Aumentar masa muscular"
+ *             required:
+ *               - name
+ *               - email
+ *               - phone
+ *               - date_birth
+ *               - goals
  *     responses:
  *       201:
  *         description: Atleta creado exitosamente
@@ -21,7 +44,8 @@
  *               properties:
  *                 message:
  *                   type: string
- *                 newStudent:
+ *                   example: "Athlete has been created"
+ *                 newAthlete:
  *                   $ref: '#/components/schemas/Athlete'
  *       400:
  *         description: Error de validación o datos duplicados
@@ -49,6 +73,7 @@
  *       400:
  *         description: Error al obtener la lista de atletas
  */
+
 
 import { NextResponse } from "next/server";
 import Athlete from "@/models/Athlete";
@@ -83,22 +108,18 @@ export async function POST(req: Request) {
         if (!trainer) {
             return NextResponse.json({ message: "Trainer not found" }, { status: 400 })
         }
-        console.log("1");
 
         const emailUser = await Athlete.findOne({ email })
         if (emailUser) {
             return NextResponse.json({ message: "email already used" }, { status: 400 })
         }
-        console.log("2");
 
         const phoneUser = await Athlete.findOne({ phone })
         if (phoneUser) {
             return NextResponse.json({ phone: "phone already used" }, { status: 400 })
         }
-        console.log("3");
 
         const newAthlete = await Athlete.create({ name, email, phone, date_birth, goals, trainer_id })
-        console.log("4");
 
         return NextResponse.json({ message: "Athlete had been created", newAthlete, status: 201 })
 

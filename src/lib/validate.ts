@@ -63,11 +63,21 @@ function isValidWeight(weight: string) {
     if (typeof weight !== 'string' || !WEIGHT_REGEX.test(weight)) {
         throw new Error("Invalid weight format. Weight must be a valid number.");
     }
+
+    const weightValue = parseFloat(weight);
+    if (weightValue < 40 || weightValue > 300) {
+        throw new Error("Weight must be between 40 and 300.");
+    }
 }
 
 function isValidHeight(height: string) {
     if (typeof height !== 'string' || !HEIGHT_REGEX.test(height)) {
         throw new Error("Invalid height format. Height must be a valid number.");
+    }
+
+    const heightValue = parseFloat(height);
+    if (heightValue < 55 || heightValue > 250) {
+        throw new Error("Height must be between 55 and 250 cm.");
     }
 }
 
@@ -76,6 +86,12 @@ function isValidGender(gender: string) {
 
     if (gender !== "hombre" && gender !== "mujer" && gender !== "otro") {
         throw new Error("Invalid gender format. Gender must be either 'hombre', 'mujer' or 'otro'.");
+    }
+}
+
+function isValidDescription(description: string) {
+    if (description && description.trim().split(/\s+/).length > 200) {
+        throw new Error("Description should not exceed 200 words.");
     }
 }
 
@@ -91,6 +107,7 @@ const validate = {
     isValidWeight,
     isValidHeight,
     isValidGender,
+    isValidDescription,
 }
 
 export default validate
