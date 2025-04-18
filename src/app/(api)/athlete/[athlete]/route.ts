@@ -84,12 +84,13 @@ import validate from "@/lib/validate";
 
 export async function GET(
   req: Request,
-  { params }: { params: { athlete_id: string } }
+  context: { params: { athlete: string } }
 ) {
   try {
     await connect();
+    const athleteId = context.params.athlete;
 
-    const athlete = await Athlete.findById(params.athlete_id);
+    const athlete = await Athlete.findById(athleteId);
     if (!athlete) {
       return NextResponse.json(
         { message: "Athlete not found" },
@@ -106,12 +107,12 @@ export async function GET(
 
 export const PATCH = async (
   req: Request,
-  { params }: { params: { athlete_id: string } }
+  context: { params: { athlete: string } }
 ) => {
   try {
     await connect();
     const user = await getCurrentUser();
-    const athleteId = params.athlete_id;
+    const athleteId = context.params.athlete;
 
     if (user.id !== athleteId) {
       return NextResponse.json(
