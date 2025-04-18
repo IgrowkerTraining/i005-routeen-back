@@ -78,7 +78,6 @@
 import { NextResponse } from "next/server";
 import Athlete from "@/models/Athlete";
 import connect from "@/lib/db";
-import { MongooseError, Types } from "mongoose";
 import Trainer from "@/models/Trainer";
 import validate from "@/lib/validate";
 import { getCurrentUser } from "@/lib/getCurrentUser";
@@ -86,10 +85,8 @@ import { getCurrentUser } from "@/lib/getCurrentUser";
 export async function POST(req: Request) {
     try {
         await connect()
-        console.log("Connected to DB");
         const user = await getCurrentUser();
         const data = await req.formData();
-        console.log(user);
 
         const trainer_id = user.id
         const name = data.get("name")?.toString() || "";

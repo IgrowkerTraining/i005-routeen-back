@@ -5,7 +5,7 @@ const { ObjectId } = Types;
 const OtpSchema = new Schema(
     {
         athlete_id: { type: ObjectId, ref: Athlete, required: true },
-        otp_code: { type: "string", required: true },
+        otp_code: { type: String, required: true },
         otp_start_date: { type: Date, required: true },
         otp_end_date: { type: Date, required: true },
         active: { type: Boolean, default: true },

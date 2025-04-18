@@ -34,9 +34,9 @@ import Athlete from "@/models/Athlete";
 import { NextResponse } from "next/server";
 import validate from "@/lib/validate";
 
-export const GET = async (req: Request, { params }: { params: { trainer: string } }) => {
+export const GET = async (req: Request, context: any) => {
     try {
-        const trainerId = params.trainer;
+        const trainerId = context.params.trainer;
         validate.isValidObjectId(trainerId)
         await connect()
 

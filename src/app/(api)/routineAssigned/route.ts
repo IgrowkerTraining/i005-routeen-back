@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /routine-assigned:
+ * /routineAssigned:
  *   post:
  *     summary: Asignar una rutina a un atleta (solo accesible para entrenadores)
  *     tags:
@@ -96,8 +96,9 @@ import { MongooseError } from "mongoose";
 import validate from "@/lib/validate";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
-export async function POST(req:Request) {
-    try { 
+
+export async function POST(req: Request) {
+    try {
         await connect()
 
         const data = await req.formData();
@@ -106,9 +107,9 @@ export async function POST(req:Request) {
         const trainer_id = user.id
         const athlete_id = data.get("athlete_id")?.toString() || "";
         const routine_id = data.get("routine_id")?.toString() || "";
-        const customDescription  = data.get("description")?.toString() || "";
-        const assignment_date  = data.get("assignment_date")?.toString() || "";
-        
+        const customDescription = data.get("description")?.toString() || "";
+        const assignment_date = data.get("assignment_date")?.toString() || "";
+
         validate.isValidDescription(customDescription)
         validate.isValidDate(assignment_date)
 
@@ -117,7 +118,7 @@ export async function POST(req:Request) {
         }
 
         if (user.role !== 'trainer') {
-            return NextResponse.json({ message: "You must be a trainer to assign assigned routines." }, { status: 403 });
+            return NextResponse.json({ message: "You must be a trainer to assign routines." }, { status: 403 });
         }
 
         if (!athlete_id) {
@@ -129,6 +130,9 @@ export async function POST(req:Request) {
         }
 
         const athlete = await Athlete.findById(athlete_id);
+        if (!athlete) {
+            return NextResponse.json({ message: "Athlete not found" }, { status: 404 });
+        }
         if (athlete.trainer_id.toString() !== trainer_id) {
             return NextResponse.json({ message: "You can only assign routines to your own athletes." }, { status: 403 });
         }
@@ -141,7 +145,7 @@ export async function POST(req:Request) {
         if (originalRoutine.trainer_id.toString() !== trainer_id) {
             return NextResponse.json({ message: "You can only assign routines that you created." }, { status: 403 });
         }
-        
+
         const description = customDescription || originalRoutine.description;
 
         const newRoutineAssigned = await RoutineAssigned.create({
@@ -151,8 +155,38 @@ export async function POST(req:Request) {
             assignment_date,
         });
 
-        return NextResponse.json({ message: "Routine assigned was successfully assigned", newRoutineAssigned, status: 201 });
-        
+        console.log("OTP sending to:", `whatsapp:${athlete.phone}`);
+        console.log("OTP fetch URL:", `${process.env.BASE_URL}/api/send-otp`);
+
+        const otpResponse = await fetch(`http://localhost:3000/send-otp`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                phoneNumber: `${athlete.phone}`,
+                athlete_id: athlete_id
+            })
+        });
+        const otpResult = await otpResponse.json();
+
+        if (!otpResponse.ok) {
+            return NextResponse.json({
+                message: "Routine assigned but OTP sending failed",
+                newRoutineAssigned,
+                error: otpResult.error || "Unknown error",
+                status: 500
+            })
+        }
+
+        return NextResponse.json({
+            message: "Routine assigned was successfully assigned and OTP sent",
+            newRoutineAssigned,
+            otp: otpResult,
+            status: 201
+        });
+
+
     } catch (creationError: any) {
         console.error("Routine creation error:", creationError);
 
@@ -161,7 +195,8 @@ export async function POST(req:Request) {
         }
 
         return NextResponse.json({
-            message: "Error creating routine: " + creationError.message, error: creationError,}, 
+            message: "Error creating routine: " + creationError.message, error: creationError,
+        },
             { status: 400 });
     }
 }
@@ -177,6 +212,6 @@ export async function GET() {
             return new NextResponse("Database error: " + error.message, { status: 500 });
         }
 
-        return new NextResponse("Error in fetching assigned routines" + error.message, {status: 500})
+        return new NextResponse("Error in fetching assigned routines" + error.message, { status: 500 })
     }
 }
