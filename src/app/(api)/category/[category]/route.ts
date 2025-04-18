@@ -123,43 +123,44 @@
 
 import { NextResponse } from "next/server";
 import connect from "@/lib/db";
-import { MongooseError } from "mongoose";
 import Category from "@/models/Category";
+import { getCurrentUser } from "@/lib/getCurrentUser";
 
 export async function GET(
     request: Request,
-    { params }: { params: { category: string  } }
-  ) {
+    context: any
+) {
     try {
-
-        const { category: categoryId } = await  params;  
-      
-      await connect();
-     
-      if (!categoryId ) {
-        return NextResponse.json({ message: "ID parameter is missing" }, { status: 400 });
-      }
-  
-
-      const category = await Category.findById(categoryId);
-  
-      if (!category) {
-        return NextResponse.json({ message: "Category not found" }, { status: 404 });
-      }
-  
-      return NextResponse.json(category);
-    } catch (error) {
-      console.error(error);
-      return NextResponse.json({ message: "Error fetching category" }, { status: 500 });
-    }
-  }
-
-export async function PATCH(req: Request, { params }: { params: { category: string} }) {
-    try {
-
         await connect();
+        const categoryId = context.params.category;
 
-        const { category: categoryById} = await params;
+        if (!categoryId) {
+            return NextResponse.json({ message: "ID parameter is missing" }, { status: 400 });
+        }
+
+        const category = await Category.findById(categoryId);
+
+        if (!category) {
+            return NextResponse.json({ message: "Category not found" }, { status: 404 });
+        }
+
+        return NextResponse.json(category);
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json({ message: "Error fetching category" }, { status: 500 });
+    }
+}
+
+export async function PATCH(req: Request, context: any) {
+    try {
+        await connect();
+        const admin = await getCurrentUser();
+        const categoryById = context.params.category;
+        const { newName } = await req.json();
+
+        if (admin.role !== 'admin') {
+            return NextResponse.json({ message: "You must be an admin to update a category." }, { status: 403 });
+        }
 
         if (!categoryById) {
             return NextResponse.json(
@@ -167,9 +168,6 @@ export async function PATCH(req: Request, { params }: { params: { category: stri
                 { status: 400 }
             );
         }
-
-        const { newName } = await req.json();
-
 
         if (!newName) {
             return NextResponse.json(
@@ -205,12 +203,16 @@ export async function PATCH(req: Request, { params }: { params: { category: stri
 }
 
 export async function DELETE(req: Request,
-    { params }: { params: { category: string } }
+    context: any
 ) {
     try {
         await connect();
+        const admin = await getCurrentUser();
+        const categoryById = context.params.category;
 
-        const { category: categoryById } = await params;
+        if (admin.role !== 'admin') {
+            return NextResponse.json({ message: "You must be an admin to update a category." }, { status: 403 });
+        }
 
         if (!categoryById) {
             return NextResponse.json(

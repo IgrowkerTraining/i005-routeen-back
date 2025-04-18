@@ -51,7 +51,7 @@ import Routine from "@/models/Routine";
 import { MongooseError } from "mongoose";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
-export async function GET(req: Request, { params }: { params: { trainer_id: string } }) {
+export async function GET(req: Request) {
     try {
         await connect();
         const user = await getCurrentUser();
@@ -60,7 +60,7 @@ export async function GET(req: Request, { params }: { params: { trainer_id: stri
             return NextResponse.json({ message: "You must be an trainer to view your created routines." }, { status: 403 });
         }
 
-        const trainer_id = user.id; 
+        const trainer_id = user.id;
 
         const routines = await Routine.find({ trainer_id }).sort({ createdAt: -1 });
 

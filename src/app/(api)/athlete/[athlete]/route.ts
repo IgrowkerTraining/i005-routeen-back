@@ -84,7 +84,7 @@ import validate from "@/lib/validate";
 
 export async function GET(
   req: Request,
-  context: { params: { athlete: string } }
+  context: any
 ) {
   try {
     await connect();
@@ -107,7 +107,7 @@ export async function GET(
 
 export const PATCH = async (
   req: Request,
-  context: { params: { athlete: string } }
+  context: any
 ) => {
   try {
     await connect();

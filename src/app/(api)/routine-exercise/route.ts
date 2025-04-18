@@ -114,11 +114,11 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     const filtered = category_id
       ? exercises.filter(
-          (e) =>
-            e.exercise_id &&
-            e.exercise_id.category &&
-            e.exercise_id.category._id.toString() === category_id
-        )
+        (e) =>
+          e.exercise_id &&
+          e.exercise_id.category &&
+          e.exercise_id.category._id.toString() === category_id
+      )
       : exercises;
 
     return NextResponse.json(
