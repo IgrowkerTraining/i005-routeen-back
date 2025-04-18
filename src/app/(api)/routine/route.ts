@@ -13,7 +13,7 @@
  *             type: object
  *             properties:
  *               name:
- *                  required: true
+ * 
  *                 type: string
  *                 example: "Rutina de fuerza"
  *                 description: "Nombre de la rutina"
@@ -90,7 +90,7 @@ import Athlete from "@/models/Athlete";
 
 
 
-export async function POST(req: Request) {
+export async function POST(req:Request) {
     try {
         await connect()
         const data = await req.formData();
@@ -118,35 +118,7 @@ export async function POST(req: Request) {
 
         const newRoutine = await Routine.create({ name, description, trainer_id })
 
-        //return NextResponse.json({ message: "Routine had been created", newRoutine, status: 201 })
-
-        const athlete_id = data.get("athlete_id")?.toString() || "";
-
-        const athlete = await Athlete.findById(athlete_id); 
-
-        if (!athlete || !athlete.phone) {
-            return NextResponse.json({ message: "Athlete not found or missing phone" }, { status: 400 });
-        }
-
-        const otpResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/send-otp`, {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify({
-                phoneNumber: `whatsapp:${athlete.phone}`,
-                athlete_id: athlete_id
-            })
-        })
-        const otpResult = await otpResponse.json();
-
-        return NextResponse.json({
-            message: "Rutina creada y OTP enviado por WhatsApp",
-            newRoutine,
-            otp: otpResult,
-            status: 201,
-        });
-
+        return NextResponse.json({ message: "Routine had been created", newRoutine, status: 201 })
 
     } catch (creationError: any) {
         console.error("Routine creation error:", creationError);
@@ -161,7 +133,6 @@ export async function POST(req: Request) {
         }, { status: 400 });
     }
 }
-
 
 export async function GET() {
     try {

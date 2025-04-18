@@ -6,7 +6,17 @@ const AthleteSchema = new Schema(
     {
         name: { type: String, required: true },
         email: { type: String, required: true, unique: true },
-        phone: { type: String, required: true, unique: true },
+        phone: { type: String, required: true, unique: true,
+            set:(value:string)=>{
+                if(!value.startsWith("whatsapp;")){
+                    const cleaned = value.replace(/\s+/g, '');
+                    const withPlus = cleaned.startsWith('+') ? cleaned : `+${cleaned}`;
+
+                    return `whatsapp:${withPlus}`
+                }
+                return value
+            }
+         },
         date_birth: { type: String, required: true },
         goals: { type: String, required: true },
         weight: { type: String },

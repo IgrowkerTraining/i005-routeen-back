@@ -83,11 +83,27 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Phone number and athleteId are required" }, { status: 400 });
     }
 
-    // Verifica que el número de teléfono tenga el prefijo "whatsapp:"
+    
     if (!phoneNumber.startsWith("whatsapp:")) {
         return NextResponse.json({ error: "Invalid phone number format" }, { status: 400 });
     }
 
+    const existingOtp = await Otp.findOne({ athlete_id, active: true });
+
+    if (existingOtp) {
+        const currentDate = new Date();
+        const otpExpiryDate = new Date(existingOtp.otp_end_date);
+
+        if (currentDate < otpExpiryDate) {
+            
+            return NextResponse.json({ error: "An active OTP already exists for this athlete." }, { status: 400 });
+        } else {
+            
+            existingOtp.active = false;
+            await existingOtp.save();
+        }
+    }
+    
     const { code, otp_end_date } = generateOTP();
     const otp_start_date = new Date();
 
