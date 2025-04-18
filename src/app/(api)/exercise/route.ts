@@ -76,6 +76,8 @@ interface ExerciseInput {
 export const POST = async (request: Request): Promise<NextResponse> => {
   try {
     const user = await getCurrentUser();
+    await connect();
+    const body: ExerciseInput = await request.json();
 
     if (user.role !== "admin") {
       return NextResponse.json(
@@ -83,10 +85,6 @@ export const POST = async (request: Request): Promise<NextResponse> => {
         { status: 403 }
       );
     }
-
-    await connect();
-
-    const body: ExerciseInput = await request.json();
 
     const forbidden = rejectForbiddenFields(body, ["img_id", "_id", "__v"]);
     if (forbidden) {

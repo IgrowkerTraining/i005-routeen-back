@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/swagger-jsdoc": "^6.0.4",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.6.0",
     "cookie": "^1.0.2",
@@ -29,7 +30,6 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/swagger-jsdoc": "^6.0.4",
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
     "postcss": "^8.5.3",

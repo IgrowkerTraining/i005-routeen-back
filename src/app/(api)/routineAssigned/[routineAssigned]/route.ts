@@ -46,11 +46,11 @@ import connect from "@/lib/db";
 import { MongooseError } from "mongoose";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
-export async function DELETE(req: Request) {
+export async function DELETE(req: Request, context: any) {
     try {
         await connect();
         const user = await getCurrentUser();
-        const { routineAssigned_id } = await req.json();
+        const routineAssigned_id = context.params.routineAssigned_id;
 
         if (user.role !== 'trainer') {
             return NextResponse.json({ message: "You must be a trainer to delete assigned routines." }, { status: 403 });

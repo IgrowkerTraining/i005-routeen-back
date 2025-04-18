@@ -2,9 +2,9 @@ import { InferSchemaType, Schema, model, models } from "mongoose";
 
 const AdminSchema = new Schema(
     {
-        email: { type: "string", required: true, unique: true },
-        password: { type: "string", required: true },
-        role: { type: "string", default: "admin" }
+        email: { type: String, required: true, unique: true },
+        password: { type: String, required: true },
+        role: { type: String, default: "admin" }
     },
     {
         timestamps: true

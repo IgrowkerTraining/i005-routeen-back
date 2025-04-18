@@ -80,12 +80,11 @@ import { cloudinary } from "@/lib/cloudinary/cloudinary";
 
 export async function GET(
     req: Request,
-    { params }: { params: { trainer: string } }
+    context: any
 ) {
     try {
-        console.log("params:", params);
         await connect();
-        const trainer = await Trainer.findById(params.trainer);
+        const trainer = await Trainer.findById(context.params.trainer);
         if (!trainer) {
             return NextResponse.json({ message: "Trainer not found" }, { status: 400 });
         }
@@ -97,12 +96,12 @@ export async function GET(
     }
 }
 
-export const PATCH = async (req: Request, { params }: { params: { trainer: string } }) => {
+export const PATCH = async (req: Request, context: any) => {
     try {
         await connect()
 
         const user = await getCurrentUser();
-        const trainerId = params.trainer;
+        const trainerId = context.params.trainer;
 
         if (user.id !== trainerId) {
             return NextResponse.json({ error: "You are not allowed to make this change" }, { status: 403 });
@@ -163,7 +162,7 @@ export const PATCH = async (req: Request, { params }: { params: { trainer: strin
             );
         }
 
-        const trainer = await Trainer.findByIdAndUpdate(params.trainer, updates, {
+        const trainer = await Trainer.findByIdAndUpdate(context.params.trainer, updates, {
             new: true,
             runValidators: true,
         });

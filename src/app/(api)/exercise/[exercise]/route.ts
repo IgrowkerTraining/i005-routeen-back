@@ -96,7 +96,7 @@ interface ExerciseInput {
 
 export const PATCH = async (
   request: Request,
-  { params }: { params: { exercise_id: string } }
+  context: any
 ): Promise<NextResponse> => {
   try {
     const user = await getCurrentUser();
@@ -107,7 +107,7 @@ export const PATCH = async (
       );
     }
 
-    const { exercise_id } = params;
+    const exercise_id = context.params.exercise;
     validate.isValidObjectId(exercise_id);
 
     await connect();
@@ -192,7 +192,7 @@ export const PATCH = async (
 
 export const DELETE = async (
   request: Request,
-  { params }: { params: { exercise_id: string } }
+  context: any
 ): Promise<NextResponse> => {
   try {
     const user = await getCurrentUser();
@@ -203,7 +203,7 @@ export const DELETE = async (
       );
     }
 
-    const { exercise_id } = params;
+    const exercise_id = context.params.exercise;
 
     if (!exercise_id) {
       return new NextResponse("Exercise ID is required", { status: 400 });

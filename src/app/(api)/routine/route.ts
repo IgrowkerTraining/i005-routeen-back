@@ -82,15 +82,8 @@ import connect from "@/lib/db";
 import { MongooseError } from "mongoose";
 import validate from "@/lib/validate";
 import { getCurrentUser } from "@/lib/getCurrentUser";
-import twilio from "twilio";
-import { generateOTP } from "@/lib/otp";
-import Otp from "@/models/Otp";
-import Athlete from "@/models/Athlete";
 
-
-
-
-export async function POST(req:Request) {
+export async function POST(req: Request) {
     try {
         await connect()
         const data = await req.formData();

@@ -48,11 +48,10 @@
 import { NextResponse } from "next/server";
 import connect from "@/lib/db";
 import RoutineAssigned from "@/models/RoutineAssigned";
-import { otp_validate } from "@/lib/otp_validate";
 import { MongooseError } from "mongoose";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
-export async function GET(req: Request, { params }: { params: { athlete_id: string } }) {
+export async function GET(req: Request) {
     try {
         await connect();
 
@@ -63,11 +62,6 @@ export async function GET(req: Request, { params }: { params: { athlete_id: stri
         }
 
         const athlete_id = user.id;
-
-        const isValidOtp = await otp_validate(user.id);
-        if (!isValidOtp) {
-            return NextResponse.json({ message: "OTP has expired or is invalid." }, { status: 403 });
-        }
 
         const routinesAssigned = await RoutineAssigned.find({ athlete_id }).populate('routine_id');
 

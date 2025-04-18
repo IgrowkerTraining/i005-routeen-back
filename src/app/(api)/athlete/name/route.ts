@@ -50,7 +50,6 @@ import Athlete from "@/models/Athlete";
 import connect from "@/lib/db";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 import { MongooseError } from "mongoose";
-import validate from "@/lib/validate";
 
 export async function GET(req: Request) {
     try {
