@@ -13,7 +13,6 @@
  *             type: object
  *             properties:
  *               name:
- * 
  *                 type: string
  *                 example: "Rutina de fuerza"
  *                 description: "Nombre de la rutina"
@@ -47,8 +46,6 @@
  *         description: Error interno del servidor al crear la rutina
  */
 
-
-
 /**
  * @swagger
  * /routine:
@@ -73,7 +70,6 @@
  *       500:
  *         description: Error al obtener las rutinas
  */
-
 
 import { NextResponse } from "next/server";
 import Routine from "@/models/Routine";

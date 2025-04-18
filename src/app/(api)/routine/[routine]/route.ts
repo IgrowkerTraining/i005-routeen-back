@@ -144,7 +144,7 @@ export async function GET(req: Request, context: any) {
         await connect();
 
         const routine = await Routine.findById(context.params.routine);
-
+        
         if (!routine) {
             return NextResponse.json({ message: "Routine not found" }, { status: 404 });
         }
@@ -182,16 +182,16 @@ export async function PATCH(req: Request) {
 
         const routine = await Routine.findOne({ routine_id });
         if (!routine) {
-            return NextResponse.json({ message: "Routine not found" }, { status: 404 });
+            return NextResponse.json({ message: "Routine not found" },{ status: 404 });
         }
 
         const updatedFields: any = {};
         if (newName) updatedFields.name = newName;
         if (newDescription) updatedFields.description = newDescription;
 
-        const updatedRoutine = await Routine.findOneAndUpdate({ routine_id }, updatedFields, { new: true });
+        const updatedRoutine = await Routine.findOneAndUpdate({ routine_id },updatedFields,{ new: true });
 
-        return NextResponse.json({ message: "Routine updated successfully", updatedRoutine }, { status: 200 });
+        return NextResponse.json({ message: "Routine updated successfully", updatedRoutine },{ status: 200 });
 
     } catch (error: any) {
         console.error("Error updating routine:", error);
@@ -230,6 +230,6 @@ export async function DELETE(req: Request) {
             return new NextResponse("Database error: " + error.message, { status: 500 });
         }
 
-        return new NextResponse("Error deleting routines" + error.message, { status: 500 })
+        return new NextResponse("Error deleting routines" + error.message, {status: 500})
     }
 }
