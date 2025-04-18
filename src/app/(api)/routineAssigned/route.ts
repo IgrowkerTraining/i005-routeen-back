@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /routine-assigned:
+ * /routineAssigned:
  *   post:
  *     summary: Asignar una rutina a un atleta (solo accesible para entrenadores)
  *     tags:
@@ -96,6 +96,7 @@ import { MongooseError } from "mongoose";
 import validate from "@/lib/validate";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
+
 export async function POST(req:Request) {
     try { 
         await connect()
@@ -129,6 +130,9 @@ export async function POST(req:Request) {
         }
 
         const athlete = await Athlete.findById(athlete_id);
+        if(!athlete){
+            return NextResponse.json({ message: "Athlete not found" }, { status: 404 });
+        }
         if (athlete.trainer_id.toString() !== trainer_id) {
             return NextResponse.json({ message: "You can only assign routines to your own athletes." }, { status: 403 });
         }
@@ -151,7 +155,35 @@ export async function POST(req:Request) {
             assignment_date,
         });
 
-        return NextResponse.json({ message: "Routine assigned was successfully assigned", newRoutineAssigned, status: 201 });
+        console.log("OTP sending to:", `whatsapp:${athlete.phone}`);
+console.log("OTP fetch URL:", `${process.env.BASE_URL}/api/send-otp`);
+
+        const otpResponse = await fetch(`http://localhost:3000/send-otp`,{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                phoneNumber:`${athlete.phone}`,
+                athlete_id: athlete_id
+            })
+        });
+        const otpResult = await otpResponse.json();
+
+        if(!otpResponse.ok){
+            return NextResponse.json({
+                message:"Routine assigned but OTP sending failed",
+                newRoutineAssigned,
+                error: otpResult.error || "Unknown error",
+                status:500
+            })
+        }
+
+        return NextResponse.json({ message: "Routine assigned was successfully assigned and OTP sent",
+             newRoutineAssigned, 
+             otp: otpResult,
+             status: 201
+             });
 
         
     } catch (creationError: any) {

@@ -20,7 +20,8 @@
     "react-dom": "^18.2.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-dist": "^5.20.7",
-    "swagger-ui-react": "^5.20.7"
+    "swagger-ui-react": "^5.20.7",
+    "twilio": "^5.5.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.17",
