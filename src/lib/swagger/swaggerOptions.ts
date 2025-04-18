@@ -76,6 +76,18 @@ const swaggerDefinition = {
         },
         required: ["athlete_id", "otp_code", "otp_start_date", "otp_end_date"],
       },
+      SendOtp: {
+        type: 'object',
+        properties: {
+          phoneNumber: {
+            type: 'string',
+          },
+          athlete_id: {
+            type: 'string',
+          },
+        },
+        required: ['phoneNumber', 'athlete_id'],
+      },
       Admin: {
         type: "object",
         properties: {
@@ -98,6 +110,7 @@ const swaggerDefinition = {
         },
         required: ["name", "category_id"],
       },
+
     },
   },
 };

@@ -108,7 +108,7 @@ export async function POST(req: Request) {
 
         const athlete_id = data.get("athlete_id")?.toString() || "";
 
-        const athlete = await Athlete.findById(athlete_id); // 🔹 Lo traes de la base de datos
+        const athlete = await Athlete.findById(athlete_id); 
 
         if (!athlete || !athlete.phone) {
             return NextResponse.json({ message: "Athlete not found or missing phone" }, { status: 400 });
