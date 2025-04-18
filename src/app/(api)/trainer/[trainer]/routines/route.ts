@@ -62,7 +62,7 @@ export async function GET(req: Request, { params }: { params: { trainer_id: stri
 
         const trainer_id = user.id; 
 
-        const routines = await Routine.find({ trainer_id });
+        const routines = await Routine.find({ trainer_id }).sort({ createdAt: -1 });
 
         if (routines.length === 0) {
             return NextResponse.json({ message: "No routines created for this trainer." }, { status: 404 });
