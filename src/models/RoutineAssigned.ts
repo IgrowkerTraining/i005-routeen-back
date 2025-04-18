@@ -5,7 +5,7 @@ const { ObjectId } = Types;
 
 const RoutineAssignedSchema = new Schema(
     {
-        assignment_date: {type: "date"},
+        assignment_date: {type: "Date"},
         description: { type: "String"},
         routine_id: { type: ObjectId, ref: "Routine", required: true },
         athlete_id: { type: ObjectId, ref: "Athlete", required: true },

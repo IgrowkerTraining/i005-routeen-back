@@ -115,8 +115,6 @@ export async function POST(req:Request) {
         return NextResponse.json({ message: "Routine had been created", newRoutine, status: 201 })
 
     } catch (creationError: any) {
-        console.error("Routine creation error:", creationError);
-
         if (creationError instanceof MongooseError) {
             return new NextResponse("Database error: " + creationError.message, { status: 500 });
         }

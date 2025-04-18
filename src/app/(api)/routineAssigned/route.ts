@@ -152,7 +152,6 @@ export async function POST(req:Request) {
         });
 
         return NextResponse.json({ message: "Routine assigned was successfully assigned", newRoutineAssigned, status: 201 });
-
         
     } catch (creationError: any) {
         console.error("Routine creation error:", creationError);
