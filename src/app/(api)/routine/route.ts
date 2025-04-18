@@ -13,7 +13,6 @@
  *             type: object
  *             properties:
  *               name:
- * 
  *                 type: string
  *                 example: "Rutina de fuerza"
  *                 description: "Nombre de la rutina"
@@ -47,8 +46,6 @@
  *         description: Error interno del servidor al crear la rutina
  */
 
-
-
 /**
  * @swagger
  * /routine:
@@ -73,7 +70,6 @@
  *       500:
  *         description: Error al obtener las rutinas
  */
-
 
 import { NextResponse } from "next/server";
 import Routine from "@/models/Routine";
@@ -114,8 +110,6 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: "Routine had been created", newRoutine, status: 201 })
 
     } catch (creationError: any) {
-        console.error("Routine creation error:", creationError);
-
         if (creationError instanceof MongooseError) {
             return new NextResponse("Database error: " + creationError.message, { status: 500 });
         }

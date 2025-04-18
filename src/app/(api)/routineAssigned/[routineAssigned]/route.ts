@@ -1,25 +1,20 @@
 /**
  * @swagger
- * /routineAssigned:
+ * /routineAssigned/{routineAssigned_id}:
  *   delete:
- *     summary: Eliminar una rutina asignada a un atleta
+ *     summary: Eliminar una rutina asignada por un entrenador
  *     tags:
  *       - RoutineAssigned
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               routineAssigned_id:
- *                 type: string
- *                 example: "605c72ef1532072fb79e3c9f"
- *             required:
- *               - routineAssigned_id
+ *     parameters:
+ *       - in: path
+ *         name: routineAssigned_id
+ *         required: true
+ *         description: ID de la rutina asignada a eliminar
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
- *         description: Routine successfully deleted
+ *         description: Rutina asignada eliminada exitosamente
  *         content:
  *           application/json:
  *             schema:
@@ -29,14 +24,15 @@
  *                   type: string
  *                   example: "Assigned routine deleted successfully"
  *       400:
- *         description: Invalid request or missing routineAssigned_id
+ *         description: Error al intentar eliminar la rutina asignada (por ejemplo, si no se proporciona el ID de la rutina)
  *       403:
- *         description: Unauthorized. Only the trainer who assigned the routine can delete it.
+ *         description: Acceso denegado. Solo los entrenadores pueden eliminar rutinas asignadas
  *       404:
- *         description: Assigned routine not found
+ *         description: Rutina asignada o rutina original no encontrada
  *       500:
- *         description: Internal server error
+ *         description: Error interno del servidor
  */
+
 
 
 import { NextResponse } from "next/server";
