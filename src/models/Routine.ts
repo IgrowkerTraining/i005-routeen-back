@@ -4,8 +4,8 @@ const { ObjectId } = Types;
 
 const RoutineSchema = new Schema(
     {
-        name: { type: "String", required: true },
-        description: { type: "String"},
+        name: { type: String, required: true },
+        description: { type: String },
         trainer_id: { type: ObjectId, ref: "Trainer", required: true },
     },
     {

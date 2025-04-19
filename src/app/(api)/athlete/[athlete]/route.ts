@@ -45,7 +45,6 @@
  *       500:
  *         description: Error interno del servidor al crear la rutina
  */
-
 /**
  * @swagger
  * /athlete/{athlete}:
@@ -249,3 +248,4 @@ export const PATCH = async (
 };
 
 //TODO ver que hacer con delete
+

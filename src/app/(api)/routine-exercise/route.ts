@@ -181,7 +181,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         { status: 400 }
       );
     }
-
+    
     try {
       validate.isValidObjectId(routine_id);
     } catch (validationError) {
@@ -204,3 +204,4 @@ export async function GET(request: Request): Promise<NextResponse> {
     return NextResponse.json({ message }, { status });
   }
 }
+

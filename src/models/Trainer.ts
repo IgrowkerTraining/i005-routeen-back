@@ -2,14 +2,14 @@ import { InferSchemaType, Schema, model, models } from "mongoose";
 
 const TrainerSchema = new Schema(
     {
-        name: { type: "string", required: true },
-        email: { type: "string", required: true, unique: true },
-        password: { type: "string", required: true },
-        phone: { type: "string", required: true, unique: true  },
-        date_birth: { type: "string", required: true },
-        role: { type: "string", default: "trainer" },
-        profile_picture_url: { type: "string" },
-        profile_picture_id: { type: "string" },
+        name: { type: String, required: true },
+        email: { type: String, required: true, unique: true },
+        password: { type: String, required: true },
+        phone: { type: String, required: true, unique: true },
+        date_birth: { type: String, required: true },
+        role: { type: String, default: "trainer" },
+        profile_picture_url: { type: String },
+        profile_picture_id: { type: String },
     },
     {
         timestamps: true

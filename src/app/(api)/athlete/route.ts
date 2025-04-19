@@ -78,7 +78,6 @@
 import { NextResponse } from "next/server";
 import Athlete from "@/models/Athlete";
 import connect from "@/lib/db";
-import { MongooseError, Types } from "mongoose";
 import Trainer from "@/models/Trainer";
 import validate from "@/lib/validate";
 import { getCurrentUser } from "@/lib/getCurrentUser";
@@ -86,10 +85,8 @@ import { getCurrentUser } from "@/lib/getCurrentUser";
 export async function POST(req: Request) {
     try {
         await connect()
-        console.log("Connected to DB");
         const user = await getCurrentUser();
         const data = await req.formData();
-        console.log(user);
 
         const trainer_id = user.id
         const name = data.get("name")?.toString() || "";
@@ -108,22 +105,18 @@ export async function POST(req: Request) {
         if (!trainer) {
             return NextResponse.json({ message: "Trainer not found" }, { status: 400 })
         }
-        console.log("1");
 
         const emailUser = await Athlete.findOne({ email })
         if (emailUser) {
             return NextResponse.json({ message: "email already used" }, { status: 400 })
         }
-        console.log("2");
 
         const phoneUser = await Athlete.findOne({ phone })
         if (phoneUser) {
             return NextResponse.json({ phone: "phone already used" }, { status: 400 })
         }
-        console.log("3");
 
         const newAthlete = await Athlete.create({ name, email, phone, date_birth, goals, trainer_id })
-        console.log("4");
 
         return NextResponse.json({ message: "Athlete had been created", newAthlete, status: 201 })
 

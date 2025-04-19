@@ -89,6 +89,12 @@ function isValidGender(gender: string) {
     }
 }
 
+function isValidDescription(description: string) {
+    if (description && description.trim().split(/\s+/).length > 200) {
+        throw new Error("Description should not exceed 200 words.");
+    }
+}
+
 const validate = {
     isValidObjectId,
     isValidName,
@@ -101,6 +107,7 @@ const validate = {
     isValidWeight,
     isValidHeight,
     isValidGender,
+    isValidDescription,
 }
 
 export default validate

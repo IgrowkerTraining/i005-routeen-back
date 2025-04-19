@@ -96,6 +96,7 @@ interface ExerciseInput {
 
 export const PATCH = async (
   request: Request,
+
   context: { params: { exercise?: string } }
 ): Promise<NextResponse> => {
   try {
@@ -121,6 +122,7 @@ export const PATCH = async (
     await connect();
 
     const exercise = await Exercise.findById(exerciseId);
+
     if (!exercise) {
       return NextResponse.json(
         { message: "Exercise not found" },
@@ -201,6 +203,7 @@ export const PATCH = async (
 export const DELETE = async (
   request: Request,
   context: { params: { exercise?: string } }
+
 ): Promise<NextResponse> => {
   try {
     const user = await getCurrentUser();
@@ -225,6 +228,7 @@ export const DELETE = async (
     await connect();
 
     const exercise = await Exercise.findById(exerciseId);
+
     if (!exercise) {
       return new NextResponse("Exercise not found", { status: 404 });
     }
