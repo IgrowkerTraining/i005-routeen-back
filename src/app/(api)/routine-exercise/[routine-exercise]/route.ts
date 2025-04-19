@@ -153,9 +153,9 @@ export async function PATCH(
   await connect();
 
   try {
-    const routineExercise_id = context.params["routine-exercise"];
+    const routineExerciseId = context.params["routine-exercise"];
 
-    if (!routineExercise_id) {
+    if (!routineExerciseId) {
       return NextResponse.json(
         { message: "Missing routineExercise ID in route" },
         { status: 400 }
@@ -163,7 +163,7 @@ export async function PATCH(
     }
 
     try {
-      validate.isValidObjectId(routineExercise_id);
+      validate.isValidObjectId(routineExerciseId);
     } catch (validationError) {
       return NextResponse.json(
         { message: (validationError as Error).message },
@@ -174,7 +174,7 @@ export async function PATCH(
     const body: RoutineExerciseBody = await request.json();
     const { desired_order, ...updateFields } = body;
 
-    const routineExercise = await RoutineExercise.findById(routineExercise_id);
+    const routineExercise = await RoutineExercise.findById(routineExerciseId);
     if (!routineExercise) {
       return NextResponse.json(
         { message: "RoutineExercise not found" },
@@ -190,7 +190,7 @@ export async function PATCH(
       );
 
       const currentIndex = existingExercises.findIndex(
-        (ex) => ex._id.toString() === routineExercise_id
+        (ex) => ex._id.toString() === routineExerciseId
       );
 
       if (currentIndex === -1) {
@@ -208,7 +208,7 @@ export async function PATCH(
 
       if (newOrder !== currentOrder) {
         for (const ex of existingExercises) {
-          if (ex._id.toString() === routineExercise_id) continue;
+          if (ex._id.toString() === routineExerciseId) continue;
 
           if (
             newOrder < currentOrder &&
@@ -253,9 +253,9 @@ export async function GET(
   await connect();
 
   try {
-    const routineExercise_id = context.params["routine-exercise"];
+    const routineExerciseId = context.params["routine-exercise"];
 
-    if (!routineExercise_id) {
+    if (!routineExerciseId) {
       return NextResponse.json(
         { message: "Missing routineExercise ID in route" },
         { status: 400 }
@@ -263,7 +263,7 @@ export async function GET(
     }
 
     try {
-      validate.isValidObjectId(routineExercise_id);
+      validate.isValidObjectId(routineExerciseId);
     } catch (validationError) {
       return NextResponse.json(
         { message: (validationError as Error).message },
@@ -272,7 +272,7 @@ export async function GET(
     }
 
     const routineExercise = await RoutineExercise.findById(
-      routineExercise_id
+      routineExerciseId
     ).populate("exercise_id");
 
     if (!routineExercise) {

@@ -96,7 +96,7 @@ interface ExerciseInput {
 
 export const PATCH = async (
   request: Request,
-  { params }: { params: { exercise_id: string } }
+  context: { params: { exercise?: string } }
 ): Promise<NextResponse> => {
   try {
     const user = await getCurrentUser();
@@ -107,12 +107,20 @@ export const PATCH = async (
       );
     }
 
-    const { exercise_id } = params;
-    validate.isValidObjectId(exercise_id);
+    const exerciseId = context.params["exercise"];
+
+    if (!exerciseId) {
+      return NextResponse.json(
+        { message: "Missing exercise ID in route" },
+        { status: 400 }
+      );
+    }
+
+    validate.isValidObjectId(exerciseId);
 
     await connect();
 
-    const exercise = await Exercise.findById(exercise_id);
+    const exercise = await Exercise.findById(exerciseId);
     if (!exercise) {
       return NextResponse.json(
         { message: "Exercise not found" },
@@ -192,7 +200,7 @@ export const PATCH = async (
 
 export const DELETE = async (
   request: Request,
-  { params }: { params: { exercise_id: string } }
+  context: { params: { exercise?: string } }
 ): Promise<NextResponse> => {
   try {
     const user = await getCurrentUser();
@@ -203,17 +211,20 @@ export const DELETE = async (
       );
     }
 
-    const { exercise_id } = params;
+    const exerciseId = context.params["exercise"];
 
-    if (!exercise_id) {
-      return new NextResponse("Exercise ID is required", { status: 400 });
+    if (!exerciseId) {
+      return NextResponse.json(
+        { message: "Missing exercise ID in route" },
+        { status: 400 }
+      );
     }
 
-    validate.isValidObjectId(exercise_id);
+    validate.isValidObjectId(exerciseId);
 
     await connect();
 
-    const exercise = await Exercise.findById(exercise_id);
+    const exercise = await Exercise.findById(exerciseId);
     if (!exercise) {
       return new NextResponse("Exercise not found", { status: 404 });
     }
