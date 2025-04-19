@@ -98,6 +98,40 @@ const swaggerDefinition = {
         },
         required: ["name", "category_id"],
       },
+      RoutineExercise: {
+        type: "object",
+        properties: {
+          order: {
+            type: "number",
+            example: 1,
+          },
+          reps: {
+            type: "number",
+            example: 12,
+          },
+          series: {
+            type: "number",
+            example: 3,
+          },
+          weight_kg: {
+            type: "number",
+            example: 20,
+          },
+          rest_time_s: {
+            type: "number",
+            example: 60,
+          },
+          exercise_id: {
+            type: "string",
+            example: "661e44169aa304a9e269a0e4",
+          },
+          routine_id: {
+            type: "string",
+            example: "661e44679aa304a9e269a0eb",
+          },
+        },
+        required: ["order", "exercise_id", "routine_id"],
+      },
     },
   },
 };
