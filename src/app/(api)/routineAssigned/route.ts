@@ -60,7 +60,7 @@
 
 /**
  * @swagger
- * /routine-assigned:
+ * /routineAssigned:
  *   get:
  *     summary: Obtiene todas las rutinas asignadas
  *     tags:
@@ -155,9 +155,7 @@ export async function POST(req: Request) {
             assignment_date,
         });
 
-        console.log("OTP sending to:", `whatsapp:${athlete.phone}`);
-        console.log("OTP fetch URL:", `${process.env.BASE_URL}/api/send-otp`);
-
+       
         const otpResponse = await fetch(`http://localhost:3000/send-otp`, {
             method: "POST",
             headers: {
