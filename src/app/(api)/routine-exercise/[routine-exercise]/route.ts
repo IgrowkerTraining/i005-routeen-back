@@ -148,7 +148,7 @@ interface RoutineExerciseBody {
 
 export async function PATCH(
   request: Request,
-  context: { params: { "routine-exercise"?: string } }
+  context: any
 ): Promise<NextResponse> {
   await connect();
 
@@ -248,7 +248,7 @@ export async function PATCH(
 
 export async function GET(
   request: Request,
-  context: { params: { "routine-exercise"?: string } }
+  context: any
 ): Promise<NextResponse> {
   await connect();
 
@@ -294,7 +294,7 @@ export async function GET(
 
 export async function DELETE(
   request: Request,
-  context: { params: { "routine-exercise"?: string } }
+  context: any
 ): Promise<NextResponse> {
   await connect();
 

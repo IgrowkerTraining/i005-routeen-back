@@ -96,8 +96,7 @@ interface ExerciseInput {
 
 export const PATCH = async (
   request: Request,
-
-  context: { params: { exercise?: string } }
+  context: any
 ): Promise<NextResponse> => {
   try {
     const user = await getCurrentUser();
@@ -108,7 +107,7 @@ export const PATCH = async (
       );
     }
 
-    const exerciseId = context.params["exercise"];
+    const exerciseId = context.params.exercise
 
     if (!exerciseId) {
       return NextResponse.json(
@@ -202,7 +201,7 @@ export const PATCH = async (
 
 export const DELETE = async (
   request: Request,
-  context: { params: { exercise?: string } }
+  context: any
 
 ): Promise<NextResponse> => {
   try {
@@ -214,7 +213,7 @@ export const DELETE = async (
       );
     }
 
-    const exerciseId = context.params["exercise"];
+    const exerciseId = context.params.exercise
 
     if (!exerciseId) {
       return NextResponse.json(
