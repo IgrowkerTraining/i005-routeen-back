@@ -16,6 +16,7 @@ const AssignedExerciseSchema = new Schema(
       required: true,
     },
     exercise_id: { type: ObjectId, ref: Exercise, required: true },
+    completed: { type: Boolean, required: true },
   },
   {
     timestamps: true,
