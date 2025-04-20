@@ -45,13 +45,14 @@ import connect from "@/lib/db";
 import RoutineAssigned from "@/models/RoutineAssigned";
 import { MongooseError } from "mongoose";
 import Athlete from "@/models/Athlete";
+import { getCurrentUser } from "@/lib/getCurrentUser";
 
 export async function GET(req: Request, context: any) {
     try {
         await connect();
         const user = await getCurrentUser();
         const athlete_id = context.params.athlete_id;
-      
+
         const athlete = await Athlete.findById(athlete_id)
         if (!athlete) {
             return NextResponse.json({ message: "Athelete not found" }, { status: 400 })
