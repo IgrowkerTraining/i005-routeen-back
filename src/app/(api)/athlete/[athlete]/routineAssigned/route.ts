@@ -49,20 +49,17 @@ import { NextResponse } from "next/server";
 import connect from "@/lib/db";
 import RoutineAssigned from "@/models/RoutineAssigned";
 import { MongooseError } from "mongoose";
-import { getCurrentUser } from "@/lib/getCurrentUser";
+import Athlete from "@/models/Athlete";
 
-export async function GET(req: Request) {
+export async function GET(req: Request, context: any) {
     try {
         await connect();
+        const athlete_id = context.params.athlete;
 
-        const user = await getCurrentUser();
-
-        if (user.role !== 'athlete') {
-            return NextResponse.json({ message: "You must be an athlete to view your assigned routines." }, { status: 403 });
+        const athlete = await Athlete.findById(athlete_id)
+        if (!athlete) {
+            return NextResponse.json({ message: "Athelete not found" }, { status: 400 })
         }
-
-        const athlete_id = user.id;
-
         const routinesAssigned = await RoutineAssigned.find({ athlete_id }).populate('routine_id');
 
         if (routinesAssigned.length === 0) {
@@ -78,4 +75,3 @@ export async function GET(req: Request) {
         return new NextResponse("Error in fetching assigned routines: " + error.message, { status: 500 });
     }
 }
-
