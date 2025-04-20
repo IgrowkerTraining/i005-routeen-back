@@ -82,10 +82,10 @@ import validate from "@/lib/validate";
 
 export async function GET(
   req: Request,
-  context: { params: { athlete?: string } }
+  context: any
 ) {
   try {
-    const athleteId = context.params["athlete"];
+    const athleteId = context.params.athlete
 
     if (!athleteId) {
       return NextResponse.json(
@@ -116,12 +116,12 @@ export async function GET(
 
 export const PATCH = async (
   req: Request,
-  context: { params: { athlete?: string } }
+  context: any
 ): Promise<NextResponse> => {
   try {
     await connect();
 
-    const athleteId = context.params["athlete"];
+    const athleteId = context.params.athlete
 
     if (!athleteId) {
       return NextResponse.json(

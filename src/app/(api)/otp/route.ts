@@ -63,9 +63,9 @@ import connect from "@/lib/db";
 import { generateOTP } from "@/lib/otp";
 import validate from "@/lib/validate";
 import Otp from "@/models/Otp";
-import Student from "@/models/Athlete";
 import Trainer from "@/models/Trainer";
 import { NextResponse } from "next/server";
+import Athlete from "@/models/Athlete";
 
 export const POST = async (req: Request) => {
     try {
@@ -81,7 +81,7 @@ export const POST = async (req: Request) => {
             return NextResponse.json({ message: "Trainer not found" }, { status: 400 })
         }
 
-        const athlete = await Student.findById(athlete_id)
+        const athlete = await Athlete.findById(athlete_id)
         if (!athlete) {
             return NextResponse.json({ message: "Athelete not found" }, { status: 400 })
         }

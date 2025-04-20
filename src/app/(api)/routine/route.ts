@@ -88,9 +88,13 @@ export async function POST(req: Request) {
         const trainer_id = user.id
         const name = data.get("name")?.toString() || "";
         const description = data.get("description")?.toString() || "";
+        const difficulty = data.get("difficulty")?.toString() || "";
+        const duration = data.get("duration")?.toString() || "";
 
         validate.isValidName(name)
         validate.isValidDescription(description)
+        validate.isValidString(difficulty, "difficulty")
+        validate.isValidNumber(duration)
 
         const trainer = await Trainer.findById(trainer_id)
         if (!trainer) {
@@ -105,7 +109,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Name is required" }, { status: 400 });
         }
 
-        const newRoutine = await Routine.create({ name, description, trainer_id })
+        const newRoutine = await Routine.create({ name, duration, description, difficulty, trainer_id })
 
         return NextResponse.json({ message: "Routine had been created", newRoutine, status: 201 })
 
