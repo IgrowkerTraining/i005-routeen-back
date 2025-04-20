@@ -153,7 +153,7 @@ export async function PATCH(
   await connect();
 
   try {
-    const routineExerciseId = context.params.routineExercise;
+    const routineExerciseId = context.params["routine-exercise"];
 
     if (!routineExerciseId) {
       return NextResponse.json(
@@ -253,7 +253,7 @@ export async function GET(
   await connect();
 
   try {
-    const routineExerciseId = context.params.routineExercise;
+    const routineExerciseId = context.params["routine-exercise"];
 
     if (!routineExerciseId) {
       return NextResponse.json(
@@ -299,9 +299,9 @@ export async function DELETE(
   await connect();
 
   try {
-    const id = context.params.routineExercise;
+    const routineExerciseId = context.params["routine-exercise"];
 
-    if (!id) {
+    if (!routineExerciseId) {
       return NextResponse.json(
         { message: "Missing routineExercise ID in route" },
         { status: 400 }
@@ -309,7 +309,7 @@ export async function DELETE(
     }
 
     try {
-      validate.isValidObjectId(id);
+      validate.isValidObjectId(routineExerciseId);
     } catch (validationError) {
       return NextResponse.json(
         { message: (validationError as Error).message },
@@ -317,7 +317,7 @@ export async function DELETE(
       );
     }
 
-    const routineExercise = await RoutineExercise.findById(id);
+    const routineExercise = await RoutineExercise.findById(routineExerciseId);
     if (!routineExercise) {
       return NextResponse.json(
         { message: "RoutineExercise not found" },

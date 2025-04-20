@@ -107,7 +107,7 @@ export const PATCH = async (
       );
     }
 
-    const exerciseId = context.params.exercise;
+    const exerciseId = context.params["exercise"];
 
     if (!exerciseId) {
       return NextResponse.json(
@@ -212,7 +212,7 @@ export const DELETE = async (
       );
     }
 
-    const exerciseId = context.params.exercise;
+    const exerciseId = context.params["exercise"];
 
     if (!exerciseId) {
       return NextResponse.json(

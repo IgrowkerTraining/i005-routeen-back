@@ -25,14 +25,14 @@ export async function GET(req: Request, context: any): Promise<NextResponse> {
       );
     }
 
-    const athleteId = context.params.athlete;
+    const athleteId = context.params["athlete"];
 
     const routines = await RoutineAssigned.find({ athleteId }).select("_id");
     const routineIds = routines.map((r) => r._id);
 
     const assignedExercises = await AssignedExercise.find({
-      assignedRoutineId: { $in: routineIds },
-    }).populate("exerciseId");
+      assigned_routine_id: { $in: routineIds },
+    }).populate("exercise_id");
     return NextResponse.json({ assignedExercises }, { status: 200 });
   } catch (error: unknown) {
     const { message, status } = handleError(error);
