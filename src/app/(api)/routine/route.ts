@@ -93,8 +93,8 @@ export async function POST(req: Request) {
 
         validate.isValidName(name)
         validate.isValidDescription(description)
-        validate.isValidString(difficulty, "difficulty")
-        validate.isValidNumber(duration)
+        validate.isValidDifficulty(difficulty)
+        validate.isValidDuration(duration)
 
         const trainer = await Trainer.findById(trainer_id)
         if (!trainer) {
