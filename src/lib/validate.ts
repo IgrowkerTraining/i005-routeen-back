@@ -53,6 +53,12 @@ function isValidDate(date: string) {
     }
 }
 
+function isValidNumber(value: any) {
+    if (typeof value !== "number" || isNaN(value)) {
+        throw new Error("Invalid number. Value must be a valid number.");
+    }
+}
+
 export function isValidString(value: any, fieldName: string) {
     if (typeof value !== "string" || value.trim() === "") {
         throw new Error(`${fieldName} is required and must be a non-empty string.`);
@@ -108,6 +114,7 @@ const validate = {
     isValidHeight,
     isValidGender,
     isValidDescription,
+    isValidNumber
 }
 
 export default validate
