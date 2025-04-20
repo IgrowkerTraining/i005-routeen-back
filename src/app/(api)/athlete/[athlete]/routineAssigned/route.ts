@@ -51,7 +51,7 @@ export async function GET(req: Request, context: any) {
     try {
         await connect();
         const user = await getCurrentUser();
-        const athlete_id = context.params.athlete_id;
+        const athlete_id = context.params.athlete;
 
         const athlete = await Athlete.findById(athlete_id)
         if (!athlete) {

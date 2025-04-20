@@ -1,12 +1,14 @@
 import { Schema, InferSchemaType, model, models, Types } from "mongoose";
+import Athlete from "./Athlete";
+import RoutineAssigned from "./RoutineAssigned";
 const { ObjectId } = Types;
 
 const RoutineHistorySchema = new Schema(
     {
-        name: { type: "String", required: true },
-        description: { type: "String"},
-        athlete_id: { type: ObjectId, ref: "Athlete", required: true },
-        assigned_routine_id: { type: ObjectId, ref: "RoutineAssigned", required: true },
+        name: { type: String, required: true },
+        description: { type: String},
+        athlete_id: { type: ObjectId, ref: Athlete, required: true },
+        assigned_routine_id: { type: ObjectId, ref: RoutineAssigned, required: true },
     },
     {
         timestamps: true
