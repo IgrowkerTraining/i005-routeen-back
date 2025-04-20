@@ -80,9 +80,11 @@ import { getCurrentUser } from "@/lib/getCurrentUser";
 import { v2 as cloudinary } from "cloudinary";
 import validate from "@/lib/validate";
 
+
 export async function GET(req: Request, context: any): Promise<NextResponse> {
+
   try {
-    const athleteId = context.params["athlete"];
+    const athleteId = context.params.athlete
 
     if (!athleteId) {
       return NextResponse.json(
@@ -118,7 +120,7 @@ export const PATCH = async (
   try {
     await connect();
 
-    const athleteId = context.params["athlete"];
+    const athleteId = context.params.athlete
 
     if (!athleteId) {
       return NextResponse.json(

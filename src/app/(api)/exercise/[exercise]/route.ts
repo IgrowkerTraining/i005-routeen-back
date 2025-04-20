@@ -109,6 +109,7 @@ export const PATCH = async (
 
     const exerciseId = context.params.exercise;
 
+
     if (!exerciseId) {
       return NextResponse.json(
         { message: "Missing exercise ID in route" },
