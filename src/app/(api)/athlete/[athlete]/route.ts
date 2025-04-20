@@ -45,8 +45,6 @@
  *       500:
  *         description: Error interno del servidor al crear la rutina
  */
-
-
 /**
  * @swagger
  * /athlete/{athlete}:
@@ -87,16 +85,27 @@ export async function GET(
   context: any
 ) {
   try {
-    await connect();
-    const athleteId = context.params.athlete;
+    const athleteId = context.params.athlete
 
-    const athlete = await Athlete.findById(athleteId);
-    if (!athlete) {
+    if (!athleteId) {
       return NextResponse.json(
         { message: "Athlete not found" },
         { status: 400 }
       );
     }
+
+    validate.isValidObjectId(athleteId);
+
+    await connect();
+
+    const athlete = await Athlete.findById(athleteId);
+    if (!athlete) {
+      return NextResponse.json(
+        { message: "Athlete not found" },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json(athlete, { status: 200 });
   } catch (error: any) {
     return new NextResponse("Error in fetching athlete: " + error.message, {
@@ -108,11 +117,22 @@ export async function GET(
 export const PATCH = async (
   req: Request,
   context: any
-) => {
+): Promise<NextResponse> => {
   try {
     await connect();
+
+    const athleteId = context.params.athlete
+
+    if (!athleteId) {
+      return NextResponse.json(
+        { message: "Athlete not found" },
+        { status: 400 }
+      );
+    }
+
+    validate.isValidObjectId(athleteId);
+
     const user = await getCurrentUser();
-    const athleteId = context.params.athlete;
 
     if (user.id !== athleteId) {
       return NextResponse.json(
@@ -228,3 +248,4 @@ export const PATCH = async (
 };
 
 //TODO ver que hacer con delete
+

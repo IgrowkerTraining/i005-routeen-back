@@ -44,13 +44,18 @@ import { NextResponse } from "next/server";
 import connect from "@/lib/db";
 import RoutineAssigned from "@/models/RoutineAssigned";
 import { MongooseError } from "mongoose";
-import { getCurrentUser } from "@/lib/getCurrentUser";
+import Athlete from "@/models/Athlete";
 
 export async function GET(req: Request, context: any) {
     try {
         await connect();
         const user = await getCurrentUser();
         const athlete_id = context.params.athlete_id;
+      
+        const athlete = await Athlete.findById(athlete_id)
+        if (!athlete) {
+            return NextResponse.json({ message: "Athelete not found" }, { status: 400 })
+        }
 
         if (user.role === 'athlete') {
             if (user.id !== athlete_id) {
@@ -78,7 +83,6 @@ export async function GET(req: Request, context: any) {
         }
         return new NextResponse("Error in fetching assigned routines: " + error.message, { status: 500 });
     }
+
 }
-
-
 

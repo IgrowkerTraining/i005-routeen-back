@@ -46,7 +46,7 @@ export async function DELETE(req: Request, context: any) {
     try {
         await connect();
         const user = await getCurrentUser();
-        const routineAssigned_id = context.params.routineAssigned_id;
+        const routineAssigned_id = context.params.routineAssigned;
 
         if (user.role !== 'trainer') {
             return NextResponse.json({ message: "You must be a trainer to delete assigned routines." }, { status: 403 });
