@@ -93,8 +93,8 @@ export async function POST(req: Request) {
 
         validate.isValidName(name)
         validate.isValidDescription(description)
-        validate.isValidString(difficulty, "difficulty")
-        validate.isValidNumber(duration)
+        validate.isValidDifficulty(difficulty)
+        validate.isValidDuration(duration)
 
         const trainer = await Trainer.findById(trainer_id)
         if (!trainer) {
@@ -137,73 +137,5 @@ export async function GET() {
         }
 
         return new NextResponse("Error in fetching routines" + error.message, { status: 500 })
-    }
-}
-
-
-export async function DELETE(req: Request) {
-    try {
-        await connect();
-        const { routine_id } = await req.json();
-
-        if (!routine_id) {
-            return new NextResponse("routine_id is required", { status: 400 });
-        }
-
-        const routine = await Routine.findById(routine_id);
-        if (!routine) {
-            return new NextResponse("Routine not found", { status: 404 });
-        }
-
-        await Routine.deleteOne({ _id: routine_id });
-
-        return NextResponse.json({ message: "Routine deleted successfully" }, { status: 200 });
-
-    } catch (error: any) {
-        if (error instanceof MongooseError) {
-            return new NextResponse("Database error: " + error.message, { status: 500 });
-        }
-
-        return new NextResponse("Error deleting routines" + error.message, { status: 500 })
-    }
-}
-
-export async function PATCH(req: Request) {
-    try {
-        await connect();
-
-        const { name, newName, newDescription } = await req.json();
-
-        if (!name || (!newName && !newDescription)) {
-            return NextResponse.json(
-                { message: "Both 'name' and at least one of 'newName' or 'newDescription' are required" },
-                { status: 400 }
-            );
-        }
-
-        const routine = await Routine.findOne({ name });
-        if (!routine) {
-            return NextResponse.json({ message: "Routine not found" }, { status: 404 });
-        }
-
-        const updatedFields: any = {};
-        if (newName) updatedFields.name = newName;
-        if (newDescription) updatedFields.description = newDescription;
-
-        const updatedRoutine = await Routine.findOneAndUpdate({ name }, updatedFields, { new: true });
-
-        return NextResponse.json({ message: "Routine updated successfully", updatedRoutine }, { status: 200 });
-
-    } catch (error: any) {
-        console.error("Error updating routine:", error);
-
-        if (error instanceof MongooseError) {
-            return new NextResponse("Database error: " + error.message, { status: 500 });
-        }
-
-        return NextResponse.json(
-            { message: "Failed to update routine", error: error.message },
-            { status: 500 }
-        );
     }
 }

@@ -7,6 +7,7 @@ const DATE_REGEX = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
 const OTP_REGEX = /^[A-Z]{3}[0-9]{3}$/
 const WEIGHT_REGEX = /^[0-9]+(\.[0-9]+)?$/;
 const HEIGHT_REGEX = /^[0-9]+(\.[0-9]+)?$/;
+const DURATION_REGEX = /^(1[0-7][0-9]|180|[1-9][0-9]|10)$/;
 
 const { ObjectId } = Types
 
@@ -101,6 +102,25 @@ function isValidDescription(description: string) {
     }
 }
 
+function isValidDifficulty(difficulty: string) {
+    difficulty = difficulty.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+    if (difficulty !== "principiante" && difficulty !== "intermedio" && difficulty !== "avanzado" && difficulty !== "experto") {
+        throw new Error("Invalid difficulty format. difficulty must be either 'principiante', 'intermedio', 'avanzado' or 'experto'.");
+    }
+}
+
+function isValidDuration(duration: string) {
+    if (typeof duration !== 'string' || !DURATION_REGEX.test(duration)) {
+        throw new Error("Invalid duration format. Duration must be a valid number.");
+    }
+
+    const durationValue = parseFloat(duration);
+    if (durationValue < 10 || durationValue > 180) {
+        throw new Error("Duration must be between 10 and 180 minutes.");
+    }
+}
+
 const validate = {
     isValidObjectId,
     isValidName,
@@ -114,7 +134,9 @@ const validate = {
     isValidHeight,
     isValidGender,
     isValidDescription,
-    isValidNumber
+    isValidNumber,
+    isValidDifficulty,
+    isValidDuration
 }
 
 export default validate

@@ -100,24 +100,11 @@ export async function POST(req:Request) {
             return NextResponse.json({ message: "You must be an athlete to finish a routine." }, { status: 403 });
         }
 
-        const { assigned_routine_id, current_routine_id } = await req.json();
+        const { assigned_routine_id} = await req.json();
 
-        if (!assigned_routine_id || !current_routine_id) {
-            return NextResponse.json({ message: "Assigned routine ID and current routine ID are required." }, { status: 400 });
-        }
-
-        const otp = await Otp.findOne({ athlete_id: user.id, active: true });
-        if (!otp || otp.otp_end_date < new Date()) {
-            return NextResponse.json({ message: "You must have a valid OTP to finish a routine." }, { status: 403 });
-        }
-
-        const routineAssigned = await RoutineAssigned.findById(assigned_routine_id);
+        const routineAssigned = await RoutineAssigned.findById(assigned_routine_id).populate("routine_id");
         if (!routineAssigned) {
             return NextResponse.json({ message: "Routine not found." }, { status: 404 });
-        }
-
-        if (routineAssigned.routine_id.toString() !== current_routine_id) {
-            return NextResponse.json({ message: "You can only finish the routine you are currently doing." }, { status: 403 });
         }
 
         const newRoutineHistory = await RoutineHistory.create({

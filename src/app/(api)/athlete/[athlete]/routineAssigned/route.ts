@@ -2,19 +2,19 @@
  * @swagger
  * /athlete/{athlete_id}/routineAssigned:
  *   get:
- *     summary: Obtener las rutinas asignadas a un atleta específico
+ *     summary: Obtener todas las rutinas asignadas a un atleta específico
  *     tags:
- *       - Athlete
+ *       - RoutineAssigned
  *     parameters:
  *       - name: athlete_id
  *         in: path
  *         required: true
- *         description: ID del atleta que desea ver sus rutinas asignadas
+ *         description: ID del atleta cuyas rutinas asignadas se desean obtener
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Rutinas asignadas al atleta obtenidas correctamente
+ *         description: Lista de rutinas asignadas al atleta
  *         content:
  *           application/json:
  *             schema:
@@ -28,38 +28,52 @@
  *                       routine_id:
  *                         type: string
  *                         description: ID de la rutina asignada
- *                       athlete_id:
- *                         type: string
- *                         description: ID del atleta
  *                       description:
  *                         type: string
  *                         description: Descripción de la rutina asignada
- *                       assignment_date:
- *                         type: string
- *                         description: Fecha en la que se asignó la rutina
  *       403:
- *         description: El usuario debe ser un atleta y solo puede ver sus propias rutinas asignadas
+ *         description: Acceso denegado. Solo un atleta puede ver sus rutinas y un entrenador solo puede ver las rutinas de un atleta específico.
  *       404:
- *         description: El atleta no tiene rutinas asignadas o el atleta no existe
+ *         description: No se encontraron rutinas asignadas para el atleta.
  *       500:
- *         description: Error interno del servidor
+ *         description: Error en el servidor al obtener las rutinas asignadas.
  */
+
 
 import { NextResponse } from "next/server";
 import connect from "@/lib/db";
 import RoutineAssigned from "@/models/RoutineAssigned";
 import { MongooseError } from "mongoose";
 import Athlete from "@/models/Athlete";
+import { getCurrentUser } from "@/lib/getCurrentUser";
 
 export async function GET(req: Request, context: any) {
     try {
         await connect();
+        const user = await getCurrentUser();
         const athlete_id = context.params.athlete;
+        console.log("Athlete ID from URL: ", athlete_id);
 
         const athlete = await Athlete.findById(athlete_id)
+        console.log("Athlete found: ", athlete);
         if (!athlete) {
-            return NextResponse.json({ message: "Athelete not found" }, { status: 400 })
+            return NextResponse.json({ message: "Athlete not found" }, { status: 400 })
         }
+
+        if (user.role === 'athlete') {
+            if (user.id !== athlete_id) {
+                return NextResponse.json({ message: "You can only view your own assigned routines." }, { status: 403 });
+            }
+        }
+
+        if (user.role === 'trainer') {
+            console.log("User ID: ", user.id);
+            console.log("Athlete Trainer ID: ", athlete.trainer_id);
+            if (athlete.trainer_id.toString() !== user.id) {
+                return NextResponse.json({ message: "You can only view the assigned routines of this specific athlete." }, { status: 403 });
+            }
+        }
+
         const routinesAssigned = await RoutineAssigned.find({ athlete_id }).populate('routine_id');
 
         if (routinesAssigned.length === 0) {
@@ -74,4 +88,6 @@ export async function GET(req: Request, context: any) {
         }
         return new NextResponse("Error in fetching assigned routines: " + error.message, { status: 500 });
     }
+
 }
+
