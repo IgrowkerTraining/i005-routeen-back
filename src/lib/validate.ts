@@ -105,8 +105,8 @@ function isValidDescription(description: string) {
 function isValidDifficulty(difficulty: string) {
     difficulty = difficulty.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
-    if (difficulty !== "facil" && difficulty !== "normal" && difficulty !== "dificil" && difficulty !== "experto") {
-        throw new Error("Invalid difficulty format. difficulty must be either 'facil', 'normal', 'dificil' or 'experto'.");
+    if (difficulty !== "principiante" && difficulty !== "intermedio" && difficulty !== "avanzado" && difficulty !== "experto") {
+        throw new Error("Invalid difficulty format. difficulty must be either 'principiante', 'intermedio', 'avanzado' or 'experto'.");
     }
 }
 
