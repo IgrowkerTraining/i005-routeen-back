@@ -15,19 +15,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
-        '/auth/:path*',
-        '/trainer/:path*',
-        '/athlete/:path*',
-        '/admin/:path*',
-        '/otp/:path*',
-        '/routine/:path*',
-        '/routine-exercise/:path*',
-        '/routineAssigned/:path*',
-        '/routineHistory/:path*',
-        '/category/:path*',
-        '/exercise/:path*',
-        '/docs/:path*',
-        '/send-otp/:path*',
-        '/test/:path*',
+        '/:path*'
     ],
 };
