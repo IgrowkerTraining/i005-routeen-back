@@ -52,10 +52,12 @@ export async function GET(req: Request, context: any) {
         await connect();
         const user = await getCurrentUser();
         const athlete_id = context.params.athlete;
+        console.log("Athlete ID from URL: ", athlete_id);
 
         const athlete = await Athlete.findById(athlete_id)
+        console.log("Athlete found: ", athlete);
         if (!athlete) {
-            return NextResponse.json({ message: "Athelete not found" }, { status: 400 })
+            return NextResponse.json({ message: "Athlete not found" }, { status: 400 })
         }
 
         if (user.role === 'athlete') {
@@ -65,7 +67,9 @@ export async function GET(req: Request, context: any) {
         }
 
         if (user.role === 'trainer') {
-            if (user.id !== athlete_id) {
+            console.log("User ID: ", user.id);
+            console.log("Athlete Trainer ID: ", athlete.trainer_id);
+            if (athlete.trainer_id.toString() !== user.id) {
                 return NextResponse.json({ message: "You can only view the assigned routines of this specific athlete." }, { status: 403 });
             }
         }
