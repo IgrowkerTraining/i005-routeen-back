@@ -1,22 +1,20 @@
 import { ObjectId } from "mongodb";
 import { models, model, Schema } from "mongoose";
-import RoutineAssigned from "./RoutineAssigned";
-import Exercise from "./Exercise";
 
 const AssignedExerciseSchema = new Schema(
   {
-    queue: { type: Number, required: true },
+    order: { type: Number, required: true },
     reps: { type: Number },
-    sets: { type: Number },
-    routine_weight: { type: Number },
-    rest_time: { type: Number },
+    series: { type: Number },
+    weight_kg: { type: Number },
+    rest_time_s: { type: Number },
     assigned_routine_id: {
       type: ObjectId,
-      ref: RoutineAssigned,
+      ref: "RoutineAssigned",
       required: true,
     },
-    exercise_id: { type: ObjectId, ref: Exercise, required: true },
-    completed: { type: Boolean, required: true },
+    exercise_id: { type: ObjectId, ref: "Exercise", required: true },
+    completed: { type: Boolean, default: false },
   },
   {
     timestamps: true,
