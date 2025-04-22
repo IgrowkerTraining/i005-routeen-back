@@ -9,7 +9,8 @@ const { ObjectId } = Types;
 const NotificationSchema = new Schema({
     trainer_id:{type: ObjectId, ref:"Trainer",required:true},
     athlete_id:{type:ObjectId, ref:"Athlete", required:true},
-    message:{type:String, required:true}
+    message:{type:String, required:true},
+    read: { type: Boolean, default: false },
 },
 {
     timestamps:true
