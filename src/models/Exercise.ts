@@ -1,6 +1,5 @@
 import { ObjectId } from "mongodb";
 import { Schema, model, models } from "mongoose";
-import Category from "./Category";
 
 const ExerciseSchema = new Schema({
   name: { type: String, required: true, unique: true },

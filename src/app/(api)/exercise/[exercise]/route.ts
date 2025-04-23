@@ -107,7 +107,8 @@ export const PATCH = async (
       );
     }
 
-    const exerciseId = context.params.exercise
+    const exerciseId = context.params["exercise"];
+
 
     if (!exerciseId) {
       return NextResponse.json(
@@ -202,7 +203,6 @@ export const PATCH = async (
 export const DELETE = async (
   request: Request,
   context: any
-
 ): Promise<NextResponse> => {
   try {
     const user = await getCurrentUser();
@@ -213,7 +213,7 @@ export const DELETE = async (
       );
     }
 
-    const exerciseId = context.params.exercise
+    const exerciseId = context.params["exercise"];
 
     if (!exerciseId) {
       return NextResponse.json(
