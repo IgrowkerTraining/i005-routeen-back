@@ -9,6 +9,7 @@ on:
     branches:
       - main
       - cicd/pipeline
+      - db/mongo-connection
   workflow_dispatch:
 
 env:
