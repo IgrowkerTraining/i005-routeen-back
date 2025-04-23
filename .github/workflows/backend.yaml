@@ -101,3 +101,6 @@ jobs:
             --name routeen-back \
             --restart=unless-stopped \
             us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/routeen-back/prod:latest
+
+      - name: Clean up unused Docker images
+        run: docker image prune -f
