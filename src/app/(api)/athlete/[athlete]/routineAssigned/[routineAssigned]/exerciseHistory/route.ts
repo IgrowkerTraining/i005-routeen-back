@@ -109,6 +109,7 @@ import { getCurrentUser } from "@/lib/getCurrentUser";
 import { MongooseError } from "mongoose";
 import ExerciseHistory from "@/models/ExerciseHistory";
 import RoutineAssigned from "@/models/RoutineAssigned";
+import AssignedExercise from "@/models/AssignedExercise";
 
 export async function POST(req: Request, context: any) {
     try {
@@ -134,37 +135,42 @@ export async function POST(req: Request, context: any) {
             return NextResponse.json({ message: "Routine Assigned not found" }, { status: 400 })
         }
 
-        // const assignedExercises = await AssignedExercise.find({ assigned_routine_id: routineAssigned_id });
+        const assignedExercises = await AssignedExercise.find({ assigned_routine_id: routineAssigned_id });
 
-        // if (!assignedExercises.length) {
-        return NextResponse.json({ message: "No assigned exercises found" }, { status: 404 });
+        console.log(assignedExercises)
+        if (!assignedExercises.length) {
+            return NextResponse.json({ message: "No assigned exercises found" }, { status: 404 });
+        }
+
+        const exerciseHistoryEntries = await Promise.all(
+            assignedExercises.map(async (exercise: any) => {
+                return ExerciseHistory.create({
+                    athlete_id,
+                    exercise_id: exercise.exercise_id,
+                    exercise_assigned_id: exercise._id,
+                    reps: exercise.reps,
+                    series: exercise.series,
+                    weight_kg: exercise.weight_kg,
+                    completed: exercise.completed,
+                });
+            })
+        );
+
+
+
+
+        return NextResponse.json(
+            { message: "Exercise history created successfully", exerciseHistoryEntries },
+            { status: 201 }
+        );
+
+    } catch (error: any) {
+        if (error instanceof MongooseError) {
+            return NextResponse.json({ message: "Database Error" + error.message }, { status: 500 });
+        }
+
+        return NextResponse.json({ message: error.message }, { status: 400 });
     }
-
-    //     const exerciseHistoryEntries = await Promise.all(
-    //     assignedExercises.map(async (exercise: any) => {
-    //         return ExerciseHistory.create({
-    //             athlete_id,
-    //             exercises_id: exercise.exercise_id,
-    //             assigned_exercises_id: exercise._id,
-    //             repetitions: exercise.repetitions,
-    //             sets: exercise.sets,
-    //             routine_weight: exercise.routine_weight,
-    //         });
-    //     })
-    // );
-
-    return NextResponse.json(
-        { message: "Exercise history created successfully", exerciseHistoryEntries },
-        { status: 201 }
-    );
-
-} catch (error: any) {
-    if (error instanceof MongooseError) {
-        return NextResponse.json({ message: "Database Error" + error.message }, { status: 500 });
-    }
-
-    return NextResponse.json({ message: error.message }, { status: 400 });
-}
 }
 
 // export async function GET(req: Request, context: any) {
