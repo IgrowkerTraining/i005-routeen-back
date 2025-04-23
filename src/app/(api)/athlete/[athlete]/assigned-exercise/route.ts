@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/getCurrentUser";
 import validate from "@/lib/validate";
 import AssignedExercise from "@/models/AssignedExercise";
 import RoutineAssigned from "@/models/RoutineAssigned";
+import "@/models/Exercise";
 import { NextResponse } from "next/server";
 
 export const GET = async (
@@ -37,7 +38,9 @@ export const GET = async (
     }).select("_id");
     const routineIds = routines.map((r) => r._id);
 
-    console.log("Routine IDs:", routineIds);
+    if (routineIds.length === 0) {
+      return NextResponse.json({ assignedExercises: [] }, { status: 200 });
+    }
 
     const assignedExercises = await AssignedExercise.find({
       assigned_routine_id: { $in: routineIds },

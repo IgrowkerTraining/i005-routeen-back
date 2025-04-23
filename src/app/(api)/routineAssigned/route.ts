@@ -135,9 +135,6 @@ export async function POST(req: Request) {
 
     const trainer_id = user.id;
     const athlete_id = data.get("athlete_id")?.toString() || "";
-
-    console.log("Athlete ID recibido:", athlete_id);
-
     const routine_id = data.get("routine_id")?.toString() || "";
     const customDescription = data.get("description")?.toString() || "";
     const assignment_date = data.get("assignment_date")?.toString() || "";
