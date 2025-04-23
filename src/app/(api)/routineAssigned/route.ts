@@ -164,15 +164,16 @@ export async function POST(req: Request) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                phoneNumber: `${athlete.phone}`,
-                athlete_id: athlete_id
+                "phoneNumber": athlete.phone,
+                "athlete_id": athlete_id,
+                "messageType": "routineAssigned"
             })
         });
         const otpResult = await otpResponse.json();
 
         if (!otpResponse.ok) {
             return NextResponse.json({
-                message: "Routine assigned but OTP sending failed",
+                message: "Routine assigned but message sending failed",
                 newRoutineAssigned,
                 error: otpResult.error || "Unknown error",
                 status: 500
@@ -180,7 +181,7 @@ export async function POST(req: Request) {
         }
 
         return NextResponse.json({
-            message: "Routine assigned was successfully assigned and OTP sent",
+            message: "Routine assigned was successfully assigned and message sent",
             newRoutineAssigned,
             otp: otpResult,
             status: 201

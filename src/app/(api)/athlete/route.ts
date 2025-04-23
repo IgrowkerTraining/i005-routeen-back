@@ -82,6 +82,7 @@ import Trainer from "@/models/Trainer";
 import validate from "@/lib/validate";
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
+
 export async function POST(req: Request) {
     try {
         await connect()
@@ -117,8 +118,35 @@ export async function POST(req: Request) {
         }
 
         const newAthlete = await Athlete.create({ name, email, phone, date_birth, goals, trainer_id })
+        
+        const otpResponse = await fetch(`http://localhost:3000/send-otp`,{
+            method:"POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body:JSON.stringify({
+                "phoneNumber": newAthlete.phone,
+                "athlete_id": newAthlete._id,
+                "messageType": "signup"
+            })
+        });
+        const otpResult = await otpResponse.json();
+        if (!otpResponse.ok) {
+            return NextResponse.json({
+                message: "Athlete created, but OTP failed to send.",
+                newAthlete,
+                error: otpResult.error || "Unknown error",
+                status: 500
+            });
+        }
 
-        return NextResponse.json({ message: "Athlete had been created", newAthlete, status: 201 })
+
+        return NextResponse.json({
+            message: "Athlete had been created and OTP sent successfully",
+            newAthlete,
+            otp: otpResult,
+            status: 201
+        });
 
     } catch (creationError: any) {
         console.error("Athlete creation error:", creationError);

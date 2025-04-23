@@ -77,7 +77,7 @@ export async function POST(req: Request) {
     await connect();
 
     const body = await req.json();
-    const { phoneNumber, athlete_id } = body;
+    const { phoneNumber, athlete_id, messageType } = body;
 
     if (!phoneNumber || !athlete_id) {
         return NextResponse.json({ error: "Phone number and athleteId are required" }, { status: 400 });
@@ -103,7 +103,7 @@ export async function POST(req: Request) {
             await existingOtp.save();
         }
     }
-    
+
     const { code, otp_end_date } = generateOTP();
     const otp_start_date = new Date();
 
@@ -117,9 +117,14 @@ export async function POST(req: Request) {
             active: true,
         });
 
-        // Enviar mensaje por WhatsApp
-        const messageText = `👋 Hola! Tu código OTP es: *${code}*\nAccedé a tu rutina aquí: http://localhost:3000/rutina?otp=${code}\nVálido hasta el ${otp_end_date.toLocaleDateString()}`;
-
+        
+        //const messageText = `👋 Hola! Tu código OTP es: *${code}*\nAccedé a tu rutina aquí: http://localhost:3000/rutina?otp=${code}\nVálido hasta el ${otp_end_date.toLocaleDateString()}`;
+        let messageText = "";
+        if(messageType ==="routineAssigned"){
+            messageText=`🏋️ ¡Hola! Se te asignó una nueva rutina.\nAccedé a ella aquí: http://localhost:3000/rutina?otp=${code}\n`;
+        }else {
+            messageText=`👋 Hola! Tu código OTP es: *${code}*\nAccedé a tu rutina aquí: http://localhost:3000/rutina?otp=${code}\nVálido hasta el ${otp_end_date.toLocaleDateString()}`;
+        }
         await client.messages.create({
             from: whatsappFrom, // Número de WhatsApp de Twilio
             to: phoneNumber, // Número de teléfono del usuario con el prefijo 'whatsapp:'
