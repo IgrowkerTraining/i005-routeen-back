@@ -21,6 +21,7 @@ export const GET = async (
 
     const isAthleteAccessingOwnData =
       user.role === "athlete" && user.id === athleteId;
+
     const isTrainer = user.role === "trainer";
 
     if (!isAthleteAccessingOwnData && !isTrainer) {
@@ -36,6 +37,7 @@ export const GET = async (
     const routines = await RoutineAssigned.find({
       athlete_id: athleteId,
     }).select("_id");
+
     const routineIds = routines.map((r) => r._id);
 
     if (routineIds.length === 0) {
@@ -47,6 +49,7 @@ export const GET = async (
     }).populate({
       path: "exercise_id",
     });
+
     return NextResponse.json({ assignedExercises }, { status: 200 });
   } catch (error: unknown) {
     const { message, status } = handleError(error);
