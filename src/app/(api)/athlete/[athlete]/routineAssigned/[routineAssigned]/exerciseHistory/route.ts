@@ -156,9 +156,6 @@ export async function POST(req: Request, context: any) {
             })
         );
 
-
-
-
         return NextResponse.json(
             { message: "Exercise history created successfully", exerciseHistoryEntries },
             { status: 201 }
@@ -172,24 +169,3 @@ export async function POST(req: Request, context: any) {
         return NextResponse.json({ message: error.message }, { status: 400 });
     }
 }
-
-// export async function GET(req: Request, context: any) {
-//     try {
-//         await connect();
-//         const athlete_id = context.params.athlete
-
-//         const weightProgress = await WeightHistory.find({ athlete_id })
-
-//         if (weightProgress.length === 0) {
-//             return NextResponse.json({ message: "No weight progress to this athlete." }, { status: 404 });
-//         }
-
-//         return NextResponse.json({ weightProgress }, { status: 200 });
-
-//     } catch (error: any) {
-//         if (error instanceof MongooseError) {
-//             return new NextResponse("Database error: " + error.message, { status: 500 });
-//         }
-//         return new NextResponse("Error in fetching weight progress: " + error.message, { status: 500 });
-//     }
-// }
