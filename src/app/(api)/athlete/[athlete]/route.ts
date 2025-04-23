@@ -80,10 +80,9 @@ import { getCurrentUser } from "@/lib/getCurrentUser";
 import { v2 as cloudinary } from "cloudinary";
 import validate from "@/lib/validate";
 
-export async function GET(
-  req: Request,
-  context: any
-) {
+
+export async function GET(req: Request, context: any): Promise<NextResponse> {
+
   try {
     const athleteId = context.params.athlete
 
@@ -248,4 +247,3 @@ export const PATCH = async (
 };
 
 //TODO ver que hacer con delete
-

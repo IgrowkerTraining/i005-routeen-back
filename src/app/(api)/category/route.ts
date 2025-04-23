@@ -85,28 +85,28 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Name is obligatory" }, { status: 400 });
         }
 
-        const normalizedName = name.trim().toLowerCase();
+        const normalizedName = name.trim()
         const existingCategory = await Category.findOne({ name: normalizedName });
         if (existingCategory) {
             return NextResponse.json({ message: "A category with this name already exists." }, { status: 409 });
         }
 
-        const newCategory = await Category.create({ name:normalizedName });
+        const newCategory = await Category.create({ name: normalizedName });
         return NextResponse.json(
             { message: "Category created successfully", category: newCategory },
             { status: 201 }
         );
 
     } catch (error: any) {
-        if(error.code ===11000){
+        if (error.code === 11000) {
             return NextResponse.json(
-                {message:"A category whit this name already exists."},
-                {status:409}
+                { message: "A category whit this name already exists." },
+                { status: 409 }
             )
         }
 
         if (error instanceof MongooseError) {
-            return NextResponse.json({ message: "Database Error" },{ status: 500 });
+            return NextResponse.json({ message: "Database Error" }, { status: 500 });
         }
 
         return NextResponse.json({ message: error.message }, { status: 400 });
