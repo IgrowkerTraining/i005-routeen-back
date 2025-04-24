@@ -1,3 +1,47 @@
+/**
+ * @swagger
+ * /athlete/{athlete}/assigned-exercise:
+ *   get:
+ *     summary: Obtiene los ejercicios asignados a un atleta
+ *     description: Solo accesible por el propio atleta o por un entrenador.
+ *     tags:
+ *       - AssignedExercise
+ *     parameters:
+ *       - name: athlete
+ *         in: path
+ *         required: true
+ *         description: ID del atleta
+ *         schema:
+ *           type: string
+ *           example: "661e50019aa304a9e269a100"
+ *     responses:
+ *       200:
+ *         description: Lista de ejercicios asignados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 assignedExercises:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/AssignedExercise'
+ *       403:
+ *         description: No autorizado. Solo el atleta o un entrenador puede acceder a esta información.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized. Only the athlete or a trainer can access this data."
+ *       400:
+ *         description: El ID del atleta no es válido
+ *       500:
+ *         description: Error del servidor
+ */
+
 import connect from "@/lib/db";
 import { handleError } from "@/lib/errorHandler";
 import { getCurrentUser } from "@/lib/getCurrentUser";
