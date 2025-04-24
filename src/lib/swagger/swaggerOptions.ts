@@ -77,16 +77,16 @@ const swaggerDefinition = {
         required: ["athlete_id", "otp_code", "otp_start_date", "otp_end_date"],
       },
       SendOtp: {
-        type: 'object',
+        type: "object",
         properties: {
           phoneNumber: {
-            type: 'string',
+            type: "string",
           },
           athlete_id: {
-            type: 'string',
+            type: "string",
           },
         },
-        required: ['phoneNumber', 'athlete_id'],
+        required: ["phoneNumber", "athlete_id"],
       },
       Admin: {
         type: "object",
@@ -145,7 +145,54 @@ const swaggerDefinition = {
         },
         required: ["order", "exercise_id", "routine_id"],
       },
-
+      AssignedExercise: {
+        type: "object",
+        properties: {
+          order: {
+            type: "number",
+            example: 1,
+          },
+          reps: {
+            type: "number",
+            example: 12,
+          },
+          series: {
+            type: "number",
+            example: 3,
+          },
+          weight_kg: {
+            type: "number",
+            example: 20,
+          },
+          rest_time_s: {
+            type: "number",
+            example: 60,
+          },
+          assigned_routine_id: {
+            type: "string",
+            example: "661e50019aa304a9e269a100",
+          },
+          exercise_id: {
+            type: "string",
+            example: "661e44169aa304a9e269a0e4",
+          },
+          completed: {
+            type: "boolean",
+            example: false,
+          },
+          createdAt: {
+            type: "string",
+            format: "date-time",
+            example: "2025-04-24T12:00:00.000Z",
+          },
+          updatedAt: {
+            type: "string",
+            format: "date-time",
+            example: "2025-04-24T12:00:00.000Z",
+          },
+        },
+        required: ["order", "assigned_routine_id", "exercise_id"],
+      },
     },
   },
 };

@@ -90,6 +90,7 @@
  */
 
 import connect from "@/lib/db";
+import { Types } from "mongoose";
 import { handleError } from "@/lib/errorHandler";
 import { normalizeOrder } from "@/lib/normalizeOrder";
 import validate from "@/lib/validate";
@@ -158,10 +159,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     await newRoutineExercise.save();
     await normalizeOrder(routine_id);
 
-    return NextResponse.json(
-      { success: true, data: newRoutineExercise },
-      { status: 201 }
-    );
+    return NextResponse.json(newRoutineExercise, { status: 201 });
   } catch (error: unknown) {
     const { message, status } = handleError(error);
     return NextResponse.json({ message }, { status });
@@ -174,6 +172,7 @@ export async function GET(request: Request): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url);
     const routine_id = searchParams.get("routine_id");
+    console.log("Routine ID received:", routine_id);
 
     if (!routine_id) {
       return NextResponse.json(
@@ -181,7 +180,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         { status: 400 }
       );
     }
-    
+
     try {
       validate.isValidObjectId(routine_id);
     } catch (validationError) {
@@ -191,17 +190,16 @@ export async function GET(request: Request): Promise<NextResponse> {
       );
     }
 
-    const exercises = await RoutineExercise.find({ routine_id })
+    const exercises = await RoutineExercise.find({
+      routine_id: new Types.ObjectId(routine_id),
+    })
       .sort({ order: 1 })
       .populate({ path: "exercise_id" });
+    const filtered = exercises.filter((e) => e.exercise_id !== null);
 
-    return NextResponse.json(
-      { success: true, data: exercises },
-      { status: 200 }
-    );
+    return NextResponse.json(filtered, { status: 200 });
   } catch (error: unknown) {
     const { message, status } = handleError(error);
     return NextResponse.json({ message }, { status });
   }
 }
-
