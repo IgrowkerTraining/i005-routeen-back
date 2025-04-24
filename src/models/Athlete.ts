@@ -8,7 +8,7 @@ const AthleteSchema = new Schema(
         email: { type: String, required: true, unique: true },
         phone: { type: String, required: true, unique: true,
             set:(value:string)=>{
-                if(!value.startsWith("whatsapp;")){
+                if(!value.startsWith("whatsapp:")){
                     const cleaned = value.replace(/\s+/g, '');
                     const withPlus = cleaned.startsWith('+') ? cleaned : `+${cleaned}`;
 
