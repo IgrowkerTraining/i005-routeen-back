@@ -118,6 +118,7 @@ export async function POST(req: Request) {
         }
 
         const newAthlete = await Athlete.create({ name, email, phone, date_birth, goals, trainer_id })
+
         
         const otpResponse = await fetch(`http://localhost:3000/send-otp`,{
             method:"POST",
