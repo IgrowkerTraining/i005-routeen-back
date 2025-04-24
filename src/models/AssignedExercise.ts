@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import { models, model, Schema } from "mongoose";
+import Exercise from "./Exercise";
 
 const AssignedExerciseSchema = new Schema(
   {
@@ -13,7 +14,7 @@ const AssignedExerciseSchema = new Schema(
       ref: "RoutineAssigned",
       required: true,
     },
-    exercise_id: { type: ObjectId, ref: "Exercise", required: true },
+    exercise_id: { type: ObjectId, ref: Exercise, required: true },
     completed: { type: Boolean, default: false },
   },
   {
