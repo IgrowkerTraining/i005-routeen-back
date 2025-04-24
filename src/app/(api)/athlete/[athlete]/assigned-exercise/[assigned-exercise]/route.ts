@@ -97,7 +97,7 @@ export const PATCH = async (
     if (updateData.series !== undefined)
       validate.isValidNumber(updateData.series);
     if (updateData.weight_kg !== undefined) {
-      validate.isValidWeight(updateData.weight_kg);
+      validate.isValidNumber(updateData.weight_kg);
     }
     if (updateData.rest_time_s !== undefined)
       validate.isValidNumber(updateData.rest_time_s);
