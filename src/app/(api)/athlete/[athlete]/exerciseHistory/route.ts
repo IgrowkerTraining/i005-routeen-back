@@ -1,3 +1,70 @@
+/**
+ * @swagger
+ * /api/athletes/{athlete}/exercise-history:
+ *   get:
+ *     summary: Obtener historial de ejercicios de un atleta
+ *     tags:
+ *       - ExerciseHistory
+ *     parameters:
+ *       - in: path
+ *         name: athlete
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID del atleta
+ *     responses:
+ *       200:
+ *         description: Historial de ejercicios recuperado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 history:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/ExerciseHistory'
+ *       400:
+ *         description: Error de solicitud (ej. atleta no encontrado)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       403:
+ *         description: Usuario no autorizado a ver esta información
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: You can only view your own assigned routines.
+ *       404:
+ *         description: No se encontró historial de ejercicios
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: No exercise history found for this athlete
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+
+
 import { NextResponse } from "next/server";
 import Athlete from "@/models/Athlete";
 import connect from "@/lib/db";
