@@ -164,7 +164,7 @@ export const PATCH = async (
       return NextResponse.json(updatedExercise, { status: 200 });
     }
 
-    return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
+    return NextResponse.json({ message: "Updated" }, { status: 200 });
   } catch (error: unknown) {
     const { message, status } = handleError(error);
     return NextResponse.json({ message }, { status });
