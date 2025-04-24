@@ -202,8 +202,9 @@ export const PATCH = async (
       updates.injuries = injuries;
     }
 
-    const file = data.get("file") as File | null;
-    if (file && file instanceof File) {
+    const file = data.get("file") as File;
+
+    if (file) {
       const existingUser = await Athlete.findById(user.id);
       if (!existingUser) {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
