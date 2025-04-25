@@ -13,5 +13,5 @@ COPY --from=builder /app/package.json ./
 COPY --from=builder /app/package-lock.json ./
 COPY --from=builder /app/.next ./.next
 RUN npm ci --omit=dev && npm cache clean --force
-EXPOSE 8080
+EXPOSE 3000
 CMD ["npm", "run", "start"]
