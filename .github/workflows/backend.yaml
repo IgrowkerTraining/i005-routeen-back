@@ -96,7 +96,7 @@ jobs:
             -e TWILIO_AUTH_TOKEN='${{ secrets.TWILIO_AUTH_TOKEN }}' \
             -e TWILIO_WHATSAPP_NUMBER='${{ secrets.TWILIO_WHATSAPP_NUMBER }}' \
             --name routeen-back \
-            -e DEBUG=false \
+            -e DEBUG=true \
             --restart=unless-stopped \
             us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/routeen-back/prod:latest
 
