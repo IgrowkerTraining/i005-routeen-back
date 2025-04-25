@@ -54,7 +54,7 @@ jobs:
           cache-to: type=registry,ref=us-east1-docker.pkg.dev/${{ env.PROJECT_ID }}/routeen-back/buildcache,mode=max
 
   deploy-to-GCP:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     needs: build-and-push-image
     permissions:
       contents: read
