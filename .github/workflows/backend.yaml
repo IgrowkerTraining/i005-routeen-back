@@ -89,7 +89,7 @@ jobs:
       - name: Deploy to Cloud Run
         run: |
           docker run -d \
-            -p 3001:3000 \
+            -p 3000:8080 \
             -e MONGODB_URI='${{ secrets.MONGODB_URI }}' \
             -e JWT_SECRET='${{ secrets.JWT_SECRET }}' \
             -e CLOUDINARY_CLOUD_NAME='${{ secrets.CLOUDINARY_CLOUD_NAME }}' \
