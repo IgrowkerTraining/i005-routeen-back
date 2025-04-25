@@ -116,12 +116,13 @@ export async function POST(req: Request, context: any) {
             return NextResponse.json({ message: "Athelete not found" }, { status: 400 })
         }
 
-        const routineAssigned = await RoutineAssigned.findByIdAndUpdate(routineAssigned_id, {
-            completed: true,
-        });
+        const routineAssigned = await RoutineAssigned.findById(routineAssigned_id)
         if (!routineAssigned) {
             return NextResponse.json({ message: "Routine Assigned not found" }, { status: 400 })
         }
+
+        routineAssigned.completed = true
+        await routineAssigned.save()
 
         const assignedExercises = await AssignedExercise.find({ assigned_routine_id: routineAssigned_id });
 

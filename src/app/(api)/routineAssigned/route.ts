@@ -142,93 +142,98 @@ export async function POST(req: Request) {
     validate.isValidDescription(customDescription);
     validate.isValidDate(assignment_date);
 
-        if (!trainer_id) {
-            return NextResponse.json({ message: "Trainer not found" }, { status: 400 })
-        }
-
-        if (user.role !== 'trainer') {
-            return NextResponse.json({ message: "You must be a trainer to assign routines." }, { status: 403 });
-        }
-
-        if (!athlete_id) {
-            return NextResponse.json({ message: "Athlete not found" }, { status: 400 })
-        }
-
-        if (!routine_id) {
-            return NextResponse.json({ message: "routine_id is required" }, { status: 400 });
-        }
-
-        const athlete = await Athlete.findById(athlete_id);
-        if (!athlete) {
-            return NextResponse.json({ message: "Athlete not found" }, { status: 404 });
-        }
-        if (athlete.trainer_id.toString() !== trainer_id) {
-            return NextResponse.json({ message: "You can only assign routines to your own athletes." }, { status: 403 });
-        }
-
-        const originalRoutine = await Routine.findById(routine_id);
-        if (!originalRoutine) {
-            return NextResponse.json({ message: "Original routine not found" }, { status: 400 });
-        }
-
-        if (originalRoutine.trainer_id.toString() !== trainer_id) {
-            return NextResponse.json({ message: "You can only assign routines that you created." }, { status: 403 });
-        }
-
-        const description = customDescription || originalRoutine.description;
-
-        const newRoutineAssigned = await RoutineAssigned.create({
-            routine_id,
-            athlete_id,
-            description,
-            assignment_date,
-        });
-
-        console.log("OTP sending to:", `whatsapp:${athlete.phone}`);
-        console.log("OTP fetch URL:", `${process.env.BASE_URL}/api/send-otp`);
-
-        const otpResponse = await fetch(`http://localhost:3000/send-otp`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "phoneNumber": athlete.phone,
-                "athlete_id": athlete_id,
-                "messageType": "routineAssigned"
-            })
-        });
-        const otpResult = await otpResponse.json();
-
-        if (!otpResponse.ok) {
-            return NextResponse.json({
-                message: "Routine assigned but message sending failed",
-                newRoutineAssigned,
-                error: otpResult.error || "Unknown error",
-                status: 500
-            })
-        }
-
-        return NextResponse.json({
-            message: "Routine assigned was successfully assigned and message sent",
-            newRoutineAssigned,
-            otp: otpResult,
-            status: 201
-        });
-
-
-    } catch (creationError: any) {
-        console.error("Routine creation error:", creationError);
-
-        if (creationError instanceof MongooseError) {
-            return new NextResponse("Database error: " + creationError.message, { status: 500 });
-        }
-
-        return NextResponse.json({
-            message: "Error creating routine: " + creationError.message, error: creationError,
-        },
-            { status: 400 });
+    if (!trainer_id) {
+      return NextResponse.json({ message: "Trainer not found" }, { status: 400 })
     }
+
+    if (user.role !== 'trainer') {
+      return NextResponse.json({ message: "You must be a trainer to assign routines." }, { status: 403 });
+    }
+
+    if (!athlete_id) {
+      return NextResponse.json({ message: "Athlete not found" }, { status: 400 })
+    }
+
+    if (!routine_id) {
+      return NextResponse.json({ message: "routine_id is required" }, { status: 400 });
+    }
+
+    const athlete = await Athlete.findById(athlete_id);
+    if (!athlete) {
+      return NextResponse.json({ message: "Athlete not found" }, { status: 404 });
+    }
+    if (athlete.trainer_id.toString() !== trainer_id) {
+      return NextResponse.json({ message: "You can only assign routines to your own athletes." }, { status: 403 });
+    }
+
+    const originalRoutine = await Routine.findById(routine_id);
+    if (!originalRoutine) {
+      return NextResponse.json({ message: "Original routine not found" }, { status: 400 });
+    }
+
+    if (originalRoutine.trainer_id.toString() !== trainer_id) {
+      return NextResponse.json({ message: "You can only assign routines that you created." }, { status: 403 });
+    }
+
+    const description = customDescription || originalRoutine.description;
+
+    const newRoutineAssigned = await RoutineAssigned.create({
+      routine_id,
+      athlete_id,
+      description,
+      assignment_date,
+    });
+
+    await assignBaseExercisesToRoutine(
+      newRoutineAssigned._id.toString(),
+      routine_id
+    );
+
+    console.log("OTP sending to:", `whatsapp:${athlete.phone}`);
+    console.log("OTP fetch URL:", `${process.env.BASE_URL}/api/send-otp`);
+
+    const otpResponse = await fetch(`http://localhost:3000/send-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "phoneNumber": athlete.phone,
+        "athlete_id": athlete_id,
+        "messageType": "routineAssigned"
+      })
+    });
+    const otpResult = await otpResponse.json();
+
+    if (!otpResponse.ok) {
+      return NextResponse.json({
+        message: "Routine assigned but message sending failed",
+        newRoutineAssigned,
+        error: otpResult.error || "Unknown error",
+        status: 500
+      })
+    }
+
+    return NextResponse.json({
+      message: "Routine assigned was successfully assigned and message sent",
+      newRoutineAssigned,
+      otp: otpResult,
+      status: 201
+    });
+
+
+  } catch (creationError: any) {
+    console.error("Routine creation error:", creationError);
+
+    if (creationError instanceof MongooseError) {
+      return new NextResponse("Database error: " + creationError.message, { status: 500 });
+    }
+
+    return NextResponse.json({
+      message: "Error creating routine: " + creationError.message, error: creationError,
+    },
+      { status: 400 });
+  }
 }
 
 export async function GET() {
