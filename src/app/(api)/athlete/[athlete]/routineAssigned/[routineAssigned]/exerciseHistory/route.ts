@@ -1,33 +1,26 @@
 /**
  * @swagger
- * /athlete/{athlete}/weightHistory:
+ * /api/athletes/{athlete}/routineAssigned/{routineAssigned}/exerciseHistory:
  *   post:
- *     summary: Agrega una entrada al historial de peso del atleta
+ *     summary: Crea el historial de ejercicios desde una rutina asignada
  *     tags:
- *       - Weight History
+ *       - ExerciseHistory
  *     parameters:
- *       - name: athlete
- *         in: path
- *         required: true
- *         description: ID del atleta
+ *       - in: path
+ *         name: athlete
  *         schema:
  *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               weight:
- *                 type: number
- *                 example: 75.5
- *                 description: Peso del atleta
- *             required:
- *               - weight
+ *         required: true
+ *         description: ID del atleta
+ *       - in: path
+ *         name: routineAssigned
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID de la rutina asignada
  *     responses:
  *       201:
- *         description: Historial de peso creado exitosamente
+ *         description: Historial de ejercicios creado exitosamente
  *         content:
  *           application/json:
  *             schema:
@@ -35,72 +28,65 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Category created successfully"
- *                 category:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                     athlete_id:
- *                       type: string
- *                     weight:
- *                       type: number
- *                     date:
- *                       type: string
- *                       format: date-time
- *                     __v:
- *                       type: number
+ *                   example: Exercise history created successfully
+ *                 exerciseHistoryEntries:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       athlete_id:
+ *                         type: string
+ *                       exercise_id:
+ *                         type: string
+ *                       exercise_assigned_id:
+ *                         type: string
+ *                       reps:
+ *                         type: number
+ *                       series:
+ *                         type: number
+ *                       weight_kg:
+ *                         type: number
+ *                       completed:
+ *                         type: boolean
  *       400:
- *         description: Datos inválidos o atleta no encontrado
- *       403:
- *         description: No autorizado para realizar esta acción
- *       500:
- *         description: Error en la base de datos
- */
-
-/**
- * @swagger
- * /athlete/{athlete}/weightHistory:
- *   get:
- *     summary: Obtener historial de peso de un atleta
- *     tags:
- *       - Weight History
- *     parameters:
- *       - name: athlete
- *         in: path
- *         required: true
- *         description: ID del atleta
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Historial de peso obtenido correctamente
+ *         description: Error de solicitud o entidad no encontrada
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 weightProgress:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                       athlete_id:
- *                         type: string
- *                       weight:
- *                         type: number
- *                       date:
- *                         type: string
- *                         format: date-time
- *                       __v:
- *                         type: number
+ *                 message:
+ *                   type: string
+ *       403:
+ *         description: Acción no permitida
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: You are not allowed to make this action
  *       404:
- *         description: No se encontró historial de peso para este atleta
+ *         description: No se encontraron ejercicios asignados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
  *       500:
  *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
  */
+
 
 import { NextResponse } from "next/server";
 import Athlete from "@/models/Athlete";
@@ -135,6 +121,9 @@ export async function POST(req: Request, context: any) {
             return NextResponse.json({ message: "Routine Assigned not found" }, { status: 400 })
         }
 
+        routineAssigned.completed = true
+        await routineAssigned.save()
+
         const assignedExercises = await AssignedExercise.find({ assigned_routine_id: routineAssigned_id });
 
         console.log(assignedExercises)
@@ -157,7 +146,7 @@ export async function POST(req: Request, context: any) {
         );
 
         return NextResponse.json(
-            { message: "Exercise history created successfully", exerciseHistoryEntries },
+            { message: "Exercise history created successfully", routineAssigned, exerciseHistoryEntries },
             { status: 201 }
         );
 

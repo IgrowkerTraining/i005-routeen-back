@@ -1,4 +1,5 @@
 [![GCP Production CI/CD Pipeline](https://github.com/IgrowkerTraining/i005-routeen-back/actions/workflows/backend.yaml/badge.svg)](https://github.com/IgrowkerTraining/i005-routeen-back/actions/workflows/backend.yaml)
+
 # 📱 Routeen
 
 **Routeen** is a _SportTech_ app designed for trainers and athletes who want to manage workout routines in a digital, fast, and intuitive way.
@@ -34,7 +35,7 @@ To get started with the Routeen backend, follow these steps:
    Clone your forked repository to your local machine:
 
    ```bash
-   git clone https://github.com/your-username/routeen.git
+   git clone https://github.com/your-username/routeen-backend.git
    ```
 
 3. **Install dependencies**  

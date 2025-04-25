@@ -1,3 +1,76 @@
+/**
+ * @swagger
+ * /athlete/{athlete}/assigned-exercise/{assigned-exercise}:
+ *   patch:
+ *     summary: Actualiza un ejercicio asignado
+ *     description: Permite que el atleta actualice campos específicos y que el entrenador actualice todos excepto `completed`.
+ *     tags:
+ *       - AssignedExercise
+ *     parameters:
+ *       - name: athlete
+ *         in: path
+ *         required: true
+ *         description: ID del atleta (usado para validar acceso)
+ *         schema:
+ *           type: string
+ *           example: "661e50019aa304a9e269a100"
+ *       - name: assigned-exercise
+ *         in: path
+ *         required: true
+ *         description: ID del ejercicio asignado
+ *         schema:
+ *           type: string
+ *           example: "661f20019aa304a9e269b1f0"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               order:
+ *                 type: number
+ *                 example: 1
+ *               reps:
+ *                 type: number
+ *                 example: 10
+ *               series:
+ *                 type: number
+ *                 example: 3
+ *               weight_kg:
+ *                 type: number
+ *                 example: 20
+ *               rest_time_s:
+ *                 type: number
+ *                 example: 60
+ *               completed:
+ *                 type: boolean
+ *                 example: true
+ *     responses:
+ *       200:
+ *         description: Ejercicio asignado actualizado con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AssignedExercise'
+ *       403:
+ *         description: No autorizado para realizar la modificación solicitada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Trainers cannot modify the 'completed' field."
+ *       404:
+ *         description: Ejercicio asignado no encontrado
+ *       400:
+ *         description: Datos no válidos
+ *       500:
+ *         description: Error del servidor
+ */
+
 import connect from "@/lib/db";
 import { handleError } from "@/lib/errorHandler";
 import { getCurrentUser } from "@/lib/getCurrentUser";
@@ -24,7 +97,7 @@ export const PATCH = async (
     if (updateData.series !== undefined)
       validate.isValidNumber(updateData.series);
     if (updateData.weight_kg !== undefined) {
-      validate.isValidWeight(updateData.weight_kg);
+      validate.isValidNumber(updateData.weight_kg);
     }
     if (updateData.rest_time_s !== undefined)
       validate.isValidNumber(updateData.rest_time_s);
@@ -91,7 +164,7 @@ export const PATCH = async (
       return NextResponse.json(updatedExercise, { status: 200 });
     }
 
-    return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
+    return NextResponse.json({ message: "Updated" }, { status: 200 });
   } catch (error: unknown) {
     const { message, status } = handleError(error);
     return NextResponse.json({ message }, { status });
