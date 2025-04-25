@@ -116,7 +116,9 @@ export async function POST(req: Request, context: any) {
             return NextResponse.json({ message: "Athelete not found" }, { status: 400 })
         }
 
-        const routineAssigned = await RoutineAssigned.findById(routineAssigned_id)
+        const routineAssigned = await RoutineAssigned.findByIdAndUpdate(routineAssigned_id, {
+            completed: true,
+        });
         if (!routineAssigned) {
             return NextResponse.json({ message: "Routine Assigned not found" }, { status: 400 })
         }
@@ -143,7 +145,7 @@ export async function POST(req: Request, context: any) {
         );
 
         return NextResponse.json(
-            { message: "Exercise history created successfully", exerciseHistoryEntries },
+            { message: "Exercise history created successfully", routineAssigned, exerciseHistoryEntries },
             { status: 201 }
         );
 
