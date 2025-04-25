@@ -8,8 +8,6 @@ on:
   push:
     branches:
       - main
-      - cicd/pipeline
-      - Fix-deploy
   workflow_dispatch:
 
 env:
