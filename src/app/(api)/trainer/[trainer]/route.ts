@@ -113,7 +113,7 @@ export const PATCH = async (req: Request, context: any) => {
         const email = data.get("email")?.toString();
         const phone = data.get("phone")?.toString();
         const date_birth = data.get("date_birth")?.toString();
-        const file = data.get("file") as File | null;
+        const file = data.get("file") as File;
 
         const updates: Partial<TrainerType> = {};
 
@@ -137,7 +137,7 @@ export const PATCH = async (req: Request, context: any) => {
             updates.date_birth = date_birth;
         }
 
-        if (file && file instanceof File) {
+        if (file) {
             const existingTrainer = await Trainer.findById(trainerId);
             if (!existingTrainer) {
                 return NextResponse.json({ message: "Trainer not found" }, { status: 404 });

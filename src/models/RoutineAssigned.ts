@@ -9,6 +9,7 @@ const RoutineAssignedSchema = new Schema(
         description: { type: String },
         routine_id: { type: ObjectId, ref: Routine, required: true },
         athlete_id: { type: ObjectId, ref: Athlete, required: true },
+        completed: { type: Boolean, default: false },
     },
     {
         timestamps: true
